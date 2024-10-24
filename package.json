@@ -29,13 +29,8 @@
     "test:react": "react-scripts test",
     "eject:react": "react-scripts eject",
     "build": "yarn build:react && electron-builder",
-    "release": "yarn build:react && set GH_TOKEN={github_token} && electron-builder"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "release": "yarn build:react && set GH_TOKEN={github_token} && electron-builder",
+    "dev": "webpack serve --env development"
   },
   "browserslist": {
     "production": [
@@ -50,10 +45,25 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.25.9",
+    "@babel/preset-env": "^7.25.9",
+    "@babel/preset-react": "^7.25.9",
+    "@eslint/js": "^9.13.0",
+    "babel-loader": "^9.2.1",
     "concurrently": "^7.0.0",
     "cross-env": "^7.0.3",
     "electron": "^17.1.2",
     "electron-builder": "^25.0.5",
-    "wait-on": "^6.0.1"
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "file-loader": "^6.2.0",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3",
+    "wait-on": "^6.0.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
   }
 }

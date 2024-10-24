@@ -1,27 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import Input from './pages/Input';
+import Result from './pages/Result';
 
 const { ipcRenderer } = window;
 
 const style = {
   margin: 10,
   padding: 10,
-  border: "1px solid",
-  borderRadius: 8
+  border: '1px solid',
+  borderRadius: 8,
 };
 
 const App = () => {
-  const [version, setVersion] = useState("");
+  const [version, setVersion] = useState('');
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    ipcRenderer.send("app_version");
+    ipcRenderer.send('app_version');
 
-    ipcRenderer.on("app_version", (event, args) => {
+    ipcRenderer.on('app_version', (event, args) => {
       setVersion(args.version);
     });
 
-    ipcRenderer.on("files", (event, args) => {
+    ipcRenderer.on('files', (event, args) => {
       setFiles(args.files);
     });
   }, []);
@@ -58,24 +60,23 @@ const App = () => {
         ))}
       </div> */}
       <div>
-      <Button
+        {/* <Button
           onClick={() => {
             ipcRenderer.send("execute-batch");
           }}
         >
           배치 파일 실행
-        </Button>
+        </Button> */}
+        {/* <Input/> */}
+        <Result />
 
-          {/* <button onClick={runBatch}>Run Batch File</button>
+        {/* <button onClick={runBatch}>Run Batch File</button>
           <pre>{output}</pre> */}
       </div>
-
     </div>
   );
 };
 
 export default App;
 
-const Button = styled.button`
-
-`
+const Button = styled.button``;
