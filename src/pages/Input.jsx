@@ -1,5 +1,6 @@
 import { ReactComponent as Picture } from '../assets/input.svg';
 import styled from 'styled-components';
+
 const Input = () => {
   return (
     <Wrapper>
