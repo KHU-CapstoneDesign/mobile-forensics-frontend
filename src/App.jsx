@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import Input from './pages/Input';
-import Result from './pages/Result';
+import Guide1 from './pages/guide/Guide1';
 
 const { ipcRenderer } = window;
 
@@ -42,38 +41,41 @@ const App = () => {
   // };
 
   return (
-    <div>
-      {/* <div style={style}>
-        <p>This is first electron desktop app.</p>
-        <p>This application version is {version}</p>
-      </div>
-      <div style={style}>
-        <button
-          onClick={() => {
-            ipcRenderer.send("files");
-          }}
-        >
-          파일 명 가져오기
-        </button>
-        {files.map(file => (
-          <p key={file}>{file}</p>
-        ))}
-      </div> */}
-      <div>
-        {/* <Button
-          onClick={() => {
-            ipcRenderer.send("execute-batch");
-          }}
-        >
-          배치 파일 실행
-        </Button> */}
-        {/* <Input/> */}
-        <Result />
+    <>
+      {' '}
+      <Guide1 />
+    </>
+    // <div>
+    //   {/* <div style={style}>
+    //     <p>This is first electron desktop app.</p>
+    //     <p>This application version is {version}</p>
+    //   </div>
+    //   <div style={style}>
+    //     <button
+    //       onClick={() => {
+    //         ipcRenderer.send("files");
+    //       }}
+    //     >
+    //       파일 명 가져오기
+    //     </button>
+    //     {files.map(file => (
+    //       <p key={file}>{file}</p>
+    //     ))}
+    //   </div> */}
+    //   <div>
+    //     {/* <Button
+    //       onClick={() => {
+    //         ipcRenderer.send("execute-batch");
+    //       }}
+    //     >
+    //       배치 파일 실행
+    //     </Button> */}
+    //     {/* <Input/> */}
 
-        {/* <button onClick={runBatch}>Run Batch File</button>
-          <pre>{output}</pre> */}
-      </div>
-    </div>
+    //     {/* <button onClick={runBatch}>Run Batch File</button>
+    //       <pre>{output}</pre> */}
+    //   </div>
+    // </div>
   );
 };
 

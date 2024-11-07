@@ -4,7 +4,12 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['plugin:react/recommended', 'plugin:prettier/recommended'],
+  extends: [
+    'plugin:prettier/recommended',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'prettier',
+  ],
   overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -16,9 +21,9 @@ module.exports = {
   },
   plugins: ['prettier', 'react'],
   rules: {
-    'no-unused-vars': 'warn',
+    'no-unused-vars': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/no-deprecated': 'warn',
-    'prettier/prettier': ['warn', { endOfLine: 'off' }],
+    'react/prop-types': 'off',
   },
 };
