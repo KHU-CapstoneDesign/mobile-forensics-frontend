@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Guide from './pages/guide/Guide';
+import Main from './pages/main/Main';
 
 const { ipcRenderer } = window;
 
@@ -35,7 +37,12 @@ const App = () => {
 
   return (
     <div>
-      <Guide />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Guide />}></Route>
+          <Route path="/main" element={<Main />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
     // <div>
     //   {/* <div style={style}>

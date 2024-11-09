@@ -1,13 +1,11 @@
 import styled from 'styled-components';
-import GuideLayout from '../../components/layout/GuideLayout';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button';
 import { ReactComponent as Step1Pic } from '../../assets/svgs/step1.svg';
 import { ReactComponent as Step2Pic } from '../../assets/svgs/step2.svg';
 import { ReactComponent as Step3Pic } from '../../assets/svgs/step3.svg';
 import { ReactComponent as CheckIcon } from '../../assets/svgs/check.svg';
-import Slider from '../../components/common/Slider';
 
 const slides = [
   {
@@ -33,6 +31,8 @@ const slides = [
 ];
 
 const Guide = () => {
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(0);
 
   const handlePrevClick = () => {
@@ -47,11 +47,14 @@ const Guide = () => {
     setStep(index);
   };
 
+  const handleSkip = () => {
+    navigate('/main');
+  };
   return (
     <Root>
       {/* <Slider /> */}
       <Wrapper>
-        <Skip>건너뛰기</Skip>
+        <Skip onClick={handleSkip}>건너뛰기</Skip>
         <GuideText>GUIDE</GuideText>
         <Container>
           <StepWrapper>
@@ -84,7 +87,7 @@ const Guide = () => {
             ''
           )}
           <Button
-            onClick={handleNextClick}
+            onClick={step === 3 ? handleSkip : handleNextClick}
             width={'100%'}
             height={'50px'}
             fontSize={'20px'}
