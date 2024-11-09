@@ -1,8 +1,7 @@
 // const { ipcRenderer } = require("electron");
 const { contextBridge, ipcRenderer } = require('electron');
 
-
-process.once("loaded", () => {
+process.once('loaded', () => {
   window.ipcRenderer = ipcRenderer;
 });
 

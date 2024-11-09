@@ -41,8 +41,8 @@ const Guide = styled.div`
 
 const Container = styled.div`
   background-color: #f5f5f5;
-  width: 900px;
-  height: 650px;
+  width: 70%;
+  height: 70%;
   border-radius: 16px;
 `;
 

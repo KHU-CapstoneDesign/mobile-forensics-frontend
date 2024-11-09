@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import Guide1 from './pages/guide/Guide1';
+import Guide from './pages/guide/Guide';
 
 const { ipcRenderer } = window;
-
-const style = {
-  margin: 10,
-  padding: 10,
-  border: '1px solid',
-  borderRadius: 8,
-};
 
 const App = () => {
   const [version, setVersion] = useState('');
@@ -41,10 +34,9 @@ const App = () => {
   // };
 
   return (
-    <>
-      {' '}
-      <Guide1 />
-    </>
+    <div>
+      <Guide />
+    </div>
     // <div>
     //   {/* <div style={style}>
     //     <p>This is first electron desktop app.</p>

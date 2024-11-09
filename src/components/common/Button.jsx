@@ -1,14 +1,33 @@
 import styled from 'styled-components';
 
-const Button = ({ width, height, text }) => {
-  return <Wrapper>{text}</Wrapper>;
+const Button = ({ type, width, height, fontSize, children, onClick }) => {
+  return (
+    <Wrapper
+      onClick={onClick}
+      type={type}
+      width={width}
+      height={height}
+      fontSize={fontSize}
+    >
+      {children}
+    </Wrapper>
+  );
 };
 
 export default Button;
 
-const Wrapper = styled.div`
-  background-color: #2c2c2c;
-  font-size: '24px';
+const Wrapper = styled.button`
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${props => (props.type === 2 ? '#ffffff' : '#2c2c2c')};
+  color: ${props => (props.type === 2 ? '#2c2c2c' : '#f5f5f5')};
+  border: 1px solid #2c2c2c;
+  border-radius: 8px;
   width: ${props => props.width || 'auto'};
   height: ${props => props.height || 'auto'};
+  font-size: ${props => props.fontSize || '16px'};
+  cursor: pointer;
 `;

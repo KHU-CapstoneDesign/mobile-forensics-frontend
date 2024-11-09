@@ -26,15 +26,8 @@
       },
     },
     {
-      test: /\.(svg)$/,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {
-            name: 'assets/[name].[ext][query]',
-          },
-        },
-      ],
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
     },
     { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
   ];
