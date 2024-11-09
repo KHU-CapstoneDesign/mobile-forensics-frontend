@@ -5,11 +5,29 @@ import { ReactComponent as CameraIcon } from '../../assets/svgs/camera.svg';
 const Layout = ({ children }) => {
   return (
     <Wrapper>
-      <Navbar>
-        <CameraIcon />
-        <div style={{ paddingTop: '5px' }}>Forensics</div>
-      </Navbar>
-      {children}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <Navbar>
+          <div
+            style={{
+              marginLeft: '30px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <CameraIcon />
+          </div>
+          <div style={{ paddingTop: '5px' }}> Forensics</div>
+        </Navbar>
+        <div style={{ width: '100%', height: '100%' }}>{children}</div>
+      </div>
     </Wrapper>
   );
 };
@@ -31,5 +49,5 @@ const Navbar = styled.div`
   color: #bdbdbd;
   font-size: 30px;
   font-weight: 600;
-  padding: 20px 30px;
+  padding: 20px 0px;
 `;
