@@ -1,12 +1,26 @@
 import styled from 'styled-components';
-import { Navigate, useNavigate } from 'react-router-dom';
-import Layout from '../../components/layout/Layout';
-import ContentButton from '../../components/main/ContentButton';
-import { ReactComponent as PhoneIcon } from '../../assets/svgs/phone.svg';
-import { ReactComponent as PCIcon } from '../../assets/svgs/pc.svg';
+import { useNavigate } from 'react-router-dom';
+import Layout from '../components/layout/Layout';
+import ContentButton from '../components/main/ContentButton';
+import { ReactComponent as PhoneIcon } from '../assets/svgs/phone.svg';
+import { ReactComponent as PCIcon } from '../assets/svgs/pc.svg';
+import { useEffect, useState } from 'react';
 
 const Main = () => {
   const navigate = useNavigate();
+
+  // 데이터 추출 여부
+  const [isExtracted, setIsExtracted] = useState(false);
+
+  // 로컬 저장소에 데이터 추출 여부 저장
+  useEffect(() => {
+    if (localStorage.getItem('isExtracted')) {
+      setIsExtracted(localStorage.getItem('isExtracted'));
+    } else {
+      localStorage.setItem('isExtracted', JSON.stringify(isExtracted));
+      setIsExtracted(false);
+    }
+  }, []);
 
   const handleGuideClick = () => {
     navigate('/');
@@ -14,6 +28,10 @@ const Main = () => {
 
   const handleDataExtractionClick = () => {
     navigate('/dataExtraction');
+  };
+
+  const handleForensicClick = () => {
+    navigate('/input');
   };
 
   return (
@@ -29,9 +47,12 @@ const Main = () => {
             desc={
               '불법 촬영 판단을 위한 데이터를 연결된 스마트폰으로부터 추출합니다.'
             }
-            buttonText={'데이터 추출하러 가기'}
+            buttonText={
+              isExtracted ? '데이터 추출 다시하기' : '데이터 추출하러 가기'
+            }
           />
           <ContentButton
+            onClick={handleForensicClick}
             number={'2'}
             title={'포렌식 결과 확인'}
             icon={<PCIcon />}

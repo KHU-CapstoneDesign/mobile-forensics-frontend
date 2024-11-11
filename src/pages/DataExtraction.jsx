@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { ReactComponent as AllowPic } from '../../assets/svgs/allow.svg';
-import { ReactComponent as CheckIcon } from '../../assets/svgs/check.svg';
-import Button from '../../components/common/Button';
-import { useFetcher, useNavigate } from 'react-router-dom';
-import Layout from '../../components/layout/Layout';
-import Modal from '../../components/data_extraction/Modal';
+import { ReactComponent as AllowPic } from '../assets/svgs/allow.svg';
+import { ReactComponent as CheckIcon } from '../assets/svgs/check.svg';
+import Button from '../components/common/Button';
+import { useNavigate } from 'react-router-dom';
+import Layout from '../components/layout/Layout';
+import Modal from '../components/dataExtraction/Modal';
 import { useState, useEffect } from 'react';
 
 const DataExtraction = () => {
@@ -16,6 +16,7 @@ const DataExtraction = () => {
     setProgress(0);
     setIsModalOpen(true);
     startTimer();
+    localStorage.setItem('isExtracted', JSON.stringify(true));
   };
 
   const closeModal = () => {

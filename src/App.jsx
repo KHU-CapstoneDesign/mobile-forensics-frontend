@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Guide from './pages/guide/Guide';
-import Main from './pages/main/Main';
-import DataExtraction from './pages/data_extraction/DataExtraction';
+import Guide from './pages/Guide';
+import Main from './pages/Main';
+import DataExtraction from './pages/DataExtraction';
+import InputPage from './pages/Input';
 
 const { ipcRenderer } = window;
 
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/" element={<Guide />}></Route>
           <Route path="/main" element={<Main />}></Route>
           <Route path="/dataExtraction" element={<DataExtraction />}></Route>
+          <Route path="/input" element={<InputPage />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

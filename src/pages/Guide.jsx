@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../components/common/Button';
-import { ReactComponent as Step1Pic } from '../../assets/svgs/step1.svg';
-import { ReactComponent as Step2Pic } from '../../assets/svgs/step2.svg';
-import { ReactComponent as Step3Pic } from '../../assets/svgs/step3.svg';
-import { ReactComponent as CheckIcon } from '../../assets/svgs/check.svg';
+import Button from '../components/common/Button';
+import { ReactComponent as Step1Pic } from '../assets/svgs/step1.svg';
+import { ReactComponent as Step2Pic } from '../assets/svgs/step2.svg';
+import { ReactComponent as Step3Pic } from '../assets/svgs/step3.svg';
+import { ReactComponent as CheckIcon } from '../assets/svgs/check.svg';
 
 const slides = [
   {

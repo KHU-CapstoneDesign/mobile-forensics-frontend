@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Button from '../common/Button';
 import { ReactComponent as CameraIcon } from '../../assets/svgs/camera.svg';
 import { ReactComponent as BackIcon } from '../../assets/svgs/back.svg';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -9,8 +8,15 @@ const Layout = ({ children }) => {
   const [url, setUrl] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+
   useEffect(() => {
     setUrl(location.pathname);
+    if (location.pathname.startsWith('/dataExtraction')) {
+      setTitle('데이터 추출');
+    } else if (location.pathname.startsWith('/input')) {
+      setTitle('포렌식 결과');
+    }
   }, [location]);
 
   return (
@@ -24,17 +30,20 @@ const Layout = ({ children }) => {
         }}
       >
         <Navbar>
-          <div
-            style={{
-              marginLeft: '30px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <CameraIcon />
-          </div>
-          <div style={{ paddingTop: '5px' }}> Forensics</div>
+          <TouchArea onClick={() => navigate('/main')}>
+            <div
+              style={{
+                marginLeft: '30px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <CameraIcon />
+            </div>
+            <Logo>Forensics</Logo>
+          </TouchArea>
+          <Title>{title}</Title>
         </Navbar>
         <ChildrenWrapper id="children-wrapper">
           {url.startsWith('/main') ? (
@@ -63,12 +72,24 @@ const Navbar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 13px;
+  gap: 40px;
   background-color: #2c2c2c;
+  padding: 20px 0px;
+`;
+
+const TouchArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 13px;
+  cursor: pointer;
+`;
+
+const Logo = styled.div`
+  padding-top: 5px;
   color: #bdbdbd;
   font-size: 30px;
   font-weight: 600;
-  padding: 20px 0px;
 `;
 
 const ChildrenWrapper = styled.div`
@@ -82,4 +103,10 @@ const IconWrap = styled.div`
   cursor: pointer;
   left: 10px;
   top: 10px;
+`;
+
+const Title = styled.div`
+  color: #d9d9d9;
+  padding-top: 5px;
+  font-size: 20px;
 `;
