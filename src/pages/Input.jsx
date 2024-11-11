@@ -77,35 +77,48 @@ const InputPage = () => {
                 flexDirection: 'column',
                 height: '100%',
                 justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
-              <InputWrapper>
-                <TextField
-                  label="장소"
-                  onClick={openHandler}
-                  value={address ? `(${zodecode}) ${address}` : ''}
-                  sx={{ backgroundColor: address ? '#eee' : '' }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <FaSearch />
-                      </InputAdornment>
-                    ),
-                  }}
-                ></TextField>
-                <DateTimePick onSetValue={handleDateTimeChange} />
-              </InputWrapper>
-              {isOpen && (
-                <div ref={postCodeRef}>
-                  <DaumPostCode
-                    onComplete={completeHandler}
-                    onClose={closeHandler}
-                    style={PostCodeStyle}
-                    theme={themeObj}
-                  />
-                </div>
-              )}
-              <Button width={'650px'} height={'50px'} fontSize={'20px'}>
+              <div>
+                <InputWrapper>
+                  <TextField
+                    label="장소"
+                    onClick={openHandler}
+                    value={address ? `(${zodecode}) ${address}` : ''}
+                    sx={{
+                      width: '300px',
+                      backgroundColor: address ? '#eee' : '',
+                      position: 'relative',
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <FaSearch />
+                        </InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                  <DateTimePick onSetValue={handleDateTimeChange} />
+                </InputWrapper>
+
+                {isOpen && (
+                  <div style={{ width: '100%' }} ref={postCodeRef}>
+                    <DaumPostCode
+                      onComplete={completeHandler}
+                      onClose={closeHandler}
+                      style={PostCodeStyle}
+                      theme={themeObj}
+                    />
+                  </div>
+                )}
+              </div>
+              <Button
+                onClick={() => alert(selectedDateTime)}
+                width={'80%'}
+                height={'50px'}
+                fontSize={'20px'}
+              >
                 결과 보기
               </Button>
             </div>
@@ -153,7 +166,7 @@ const InputWrapper = styled.div`
 `;
 
 const PostCodeStyle = {
-  width: '100%',
+  width: '90%',
   height: '450px',
   border: '1px solid #eee',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Add drop shadow

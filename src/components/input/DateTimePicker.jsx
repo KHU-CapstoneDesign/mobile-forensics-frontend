@@ -10,6 +10,7 @@ const DateTimePick = ({ onSetValue }) => {
         label="날짜 및 시간"
         format="YYYY-MM-DD hh:mm:ss"
         onChange={newValue => onSetValue(newValue)}
+        sx={{ width: '300px' }}
       />
     </LocalizationProvider>
   );
