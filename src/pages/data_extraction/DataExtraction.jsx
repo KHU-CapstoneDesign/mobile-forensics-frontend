@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as AllowPic } from '../../assets/svgs/allow.svg';
+import { ReactComponent as CheckIcon } from '../../assets/svgs/check.svg';
 import Button from '../../components/common/Button';
 import { useFetcher, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
@@ -44,22 +45,39 @@ const DataExtraction = () => {
         <Wrapper>
           <Container>
             <StepWrapper>
-              <Step>데이터 추출</Step>
+              <Step>
+                {progress === 100 ? '데이터 추출 완료' : '데이터 추출'}
+              </Step>
               <Text>
-                데이터 추출 시작 후 스마트폰에 아래와 같이 USB 디버깅 허용
-                알림창이 뜨면&nbsp;<div style={{ color: 'red' }}>허용</div>
-                해주세요
+                {progress === 100 ? (
+                  '데이터 추출이 완료 되었습니다. 메인 페이지로 돌아가 포렌식 결과를 확인하세요.'
+                ) : (
+                  <>
+                    데이터 추출 시작 후 스마트폰에 아래와 같이 USB 디버깅 허용
+                    알림창이 뜨면&nbsp;<div style={{ color: 'red' }}>허용</div>
+                    해주세요
+                  </>
+                )}
               </Text>
               <ImageWrapper>
-                <AllowPic />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {progress === 100 ? <CheckIcon /> : <AllowPic />}
+                </div>
                 <Button
                   width={'500px'}
                   height={'50px'}
                   fontSize={'20px'}
                   alignSelf={'flex-end'}
-                  onClick={openModal}
+                  onClick={progress === 100 ? () => navigate(-1) : openModal}
                 >
-                  데이터 추출하기
+                  {progress === 100 ? '결과 확인하러 가기' : '데이터 추출하기'}
                 </Button>
               </ImageWrapper>
             </StepWrapper>
@@ -114,7 +132,7 @@ const ImageWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  margin-top: 20px;
+  gap: 20px;
 `;
 
 const Dots = styled.div`
