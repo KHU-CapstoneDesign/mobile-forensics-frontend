@@ -1,17 +1,19 @@
 import styled from 'styled-components';
 import Button from '../common/Button';
 
-const ContentButton = ({ number, title, icon, desc, buttonText }) => {
+const ContentButton = ({ number, title, icon, desc, buttonText, onClick }) => {
   return (
-    <Wrapper>
-      <Number>{number}</Number>
-      <Title>{title}</Title>
-      {icon}
-      <Desc>{desc}</Desc>
-      <Button width={'322px'} height={'40px'}>
-        {buttonText}
-      </Button>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <Number>{number}</Number>
+        <Title>{title}</Title>
+        {icon}
+        <Desc>{desc}</Desc>
+        <Button width={'322px'} height={'40px'} onClick={onClick}>
+          {buttonText}
+        </Button>
+      </Wrapper>
+    </>
   );
 };
 
@@ -28,7 +30,6 @@ const Wrapper = styled.div`
   border-radius: 8px;
   padding: 35px;
   color: #2c2c2c;
-  cursor: pointer;
   &:hover {
     background-color: #eeeeee;
   }

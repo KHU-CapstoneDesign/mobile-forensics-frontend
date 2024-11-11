@@ -1,8 +1,18 @@
 import styled from 'styled-components';
 import Button from '../common/Button';
 import { ReactComponent as CameraIcon } from '../../assets/svgs/camera.svg';
+import { ReactComponent as BackIcon } from '../../assets/svgs/back.svg';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Layout = ({ children }) => {
+  const [url, setUrl] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    setUrl(location.pathname);
+  }, [location]);
+
   return (
     <Wrapper>
       <div
@@ -26,7 +36,16 @@ const Layout = ({ children }) => {
           </div>
           <div style={{ paddingTop: '5px' }}> Forensics</div>
         </Navbar>
-        <div style={{ width: '100%', height: '100%' }}>{children}</div>
+        <ChildrenWrapper id="children-wrapper">
+          {url.startsWith('/main') ? (
+            ''
+          ) : (
+            <IconWrap onClick={() => navigate(-1)}>
+              <BackIcon width={40} height={40} stroke={'#9c9c9c'} />
+            </IconWrap>
+          )}
+          {children}
+        </ChildrenWrapper>
       </div>
     </Wrapper>
   );
@@ -50,4 +69,17 @@ const Navbar = styled.div`
   font-size: 30px;
   font-weight: 600;
   padding: 20px 0px;
+`;
+
+const ChildrenWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+`;
+
+const IconWrap = styled.div`
+  position: absolute;
+  cursor: pointer;
+  left: 10px;
+  top: 10px;
 `;

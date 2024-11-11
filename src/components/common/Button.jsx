@@ -1,6 +1,14 @@
 import styled from 'styled-components';
 
-const Button = ({ type, width, height, fontSize, children, onClick }) => {
+const Button = ({
+  type,
+  width,
+  height,
+  fontSize,
+  children,
+  onClick,
+  ...props
+}) => {
   return (
     <Wrapper
       onClick={onClick}
@@ -8,6 +16,7 @@ const Button = ({ type, width, height, fontSize, children, onClick }) => {
       width={width}
       height={height}
       fontSize={fontSize}
+      {...props}
     >
       {children}
     </Wrapper>
@@ -30,4 +39,7 @@ const Wrapper = styled.button`
   height: ${props => props.height || 'auto'};
   font-size: ${props => props.fontSize || '16px'};
   cursor: pointer;
+  &:hover {
+    background-color: ${props => (props.type === 2 ? '#eaeaea' : '#444')};
+  }
 `;

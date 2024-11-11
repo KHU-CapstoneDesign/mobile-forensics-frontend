@@ -12,12 +12,17 @@ const Main = () => {
     navigate('/');
   };
 
+  const handleDataExtractionClick = () => {
+    navigate('/dataExtraction');
+  };
+
   return (
     <Layout>
       <Wrapper>
         <Guide onClick={handleGuideClick}>가이드 다시 보러 가기</Guide>
         <MainWrapper>
           <ContentButton
+            onClick={handleDataExtractionClick}
             number={'1'}
             title={'데이터 추출'}
             icon={<PhoneIcon />}

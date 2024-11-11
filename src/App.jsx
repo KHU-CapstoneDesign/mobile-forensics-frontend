@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Guide from './pages/guide/Guide';
 import Main from './pages/main/Main';
+import DataExtraction from './pages/data_extraction/DataExtraction';
 
 const { ipcRenderer } = window;
 
@@ -41,6 +42,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Guide />}></Route>
           <Route path="/main" element={<Main />}></Route>
+          <Route path="/dataExtraction" element={<DataExtraction />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
