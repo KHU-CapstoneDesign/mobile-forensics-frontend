@@ -151,11 +151,11 @@ const Wrap = styled.div`
 `;
 
 const Title = styled.div`
-  padding: 10px 20px;
+  padding: 15px 20px;
   background-color: #eeeeee;
   border-radius: 8px;
   font-size: 25px;
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const InputWrapper = styled.div`
