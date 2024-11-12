@@ -10,6 +10,7 @@ import { FaSearch } from 'react-icons/fa';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -20,6 +21,8 @@ const theme = createTheme({
 });
 
 const InputPage = () => {
+  const navigate = useNavigate();
+
   const [zonecode, setZonecode] = useState(null); // 우편번호
   const [address, setAddress] = useState(null); // 주소
   const postCodeRef = useRef(null); // 주소검색창 ref
@@ -83,6 +86,13 @@ const InputPage = () => {
     }
   }, [address]);
 
+  // 날짜 error 관리
+  useEffect(() => {
+    if (isSubmit && selectedDateTime) {
+      setErrorDateTime(false);
+    }
+  }, [selectedDateTime]);
+
   // 주소 -> 좌표 변환 api 호출
   const getLocation = async () => {
     const REST_API_KEY = process.env.REACT_APP_KAKAO_API_KEY;
@@ -112,12 +122,7 @@ const InputPage = () => {
     }
   };
 
-  // 날짜 error 관리
-  useEffect(() => {
-    if (isSubmit && selectedDateTime) {
-      setErrorDateTime(false);
-    }
-  }, [selectedDateTime]);
+  const postData = async () => {};
 
   // 결과 보기 버튼 클릭
   const handleSubmit = async () => {
@@ -136,8 +141,10 @@ const InputPage = () => {
         'YYYY-MM-DD HH:mm:ss',
       );
       const data = await getLocation();
-      console.log('final loc data', data);
-      alert(`${data.longitude}, ${data.latitude}\n${formattedDateTime}`);
+      console.log(
+        `post data: ${data.longitude}, ${data.latitude}\n${formattedDateTime}`,
+      );
+      navigate('/result');
     }
   };
 

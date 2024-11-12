@@ -5,6 +5,7 @@ import Guide from './pages/Guide';
 import Main from './pages/Main';
 import DataExtraction from './pages/DataExtraction';
 import InputPage from './pages/Input';
+import Result from './pages/Result';
 
 const { ipcRenderer } = window;
 
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/main" element={<Main />}></Route>
           <Route path="/dataExtraction" element={<DataExtraction />}></Route>
           <Route path="/input" element={<InputPage />}></Route>
+          <Route path="/result" element={<Result />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

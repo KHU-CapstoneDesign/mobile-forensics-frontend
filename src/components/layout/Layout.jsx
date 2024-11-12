@@ -14,7 +14,10 @@ const Layout = ({ children }) => {
     setUrl(location.pathname);
     if (location.pathname.startsWith('/dataExtraction')) {
       setTitle('데이터 추출');
-    } else if (location.pathname.startsWith('/input')) {
+    } else if (
+      location.pathname.startsWith('/input') ||
+      location.pathname.startsWith('/result')
+    ) {
       setTitle('포렌식 결과');
     }
   }, [location]);
@@ -68,6 +71,7 @@ const Wrapper = styled.div`
 `;
 
 const Navbar = styled.div`
+  /* display: fixed; */
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -96,6 +100,7 @@ const ChildrenWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  overflow: auto;
 `;
 
 const IconWrap = styled.div`
