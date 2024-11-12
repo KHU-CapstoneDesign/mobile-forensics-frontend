@@ -119,6 +119,7 @@ const Text = styled.div`
   font-size: 24px;
   display: flex;
   flex-direction: row;
+  white-space: nowrap;
 `;
 
 const StepWrapper = styled.div`

@@ -90,7 +90,7 @@ const TouchArea = styled.div`
 `;
 
 const Logo = styled.div`
-  padding-top: 5px;
+  /* padding-top: 5px; */
   color: #bdbdbd;
   font-size: 30px;
   font-weight: 600;

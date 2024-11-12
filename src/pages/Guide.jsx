@@ -127,7 +127,7 @@ const Skip = styled.div`
 
 const GuideText = styled.div`
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 900;
   margin-bottom: 20px;
 `;
 
@@ -190,5 +190,3 @@ const ButtonWrapper = styled.div`
   width: 650px;
   margin: 30px;
 `;
-
-const ButtonPrev = styled.button``;

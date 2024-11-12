@@ -39,7 +39,7 @@ const App = () => {
   // };
 
   return (
-    <div>
+    <Root>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Guide />}></Route>
@@ -49,7 +49,7 @@ const App = () => {
           <Route path="/result" element={<Result />}></Route>
         </Routes>
       </BrowserRouter>
-    </div>
+    </Root>
     // <div>
     //   {/* <div style={style}>
     //     <p>This is first electron desktop app.</p>
@@ -86,4 +86,6 @@ const App = () => {
 
 export default App;
 
-const Button = styled.button``;
+const Root = styled.div`
+  font-family: Pretendard-Regular;
+`;
