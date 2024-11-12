@@ -1,0 +1,367 @@
+#!/bin/bash
+
+# UTF-8 인코딩 설정
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# # 1. ADB 및 EXIFTool 다운
+brew list android-platform-tools &>/dev/null || brew install android-platform-tools
+brew list exiftool &>/dev/null || brew install exiftool
+
+# 3. 사진 파일 복사
+echo "사진 파일 복사 중..."
+
+# 폴더가 없으면 새로 생성
+if [ ! -d "/Users/Shared/test/Camera" ]; then
+  echo "폴더가 존재하지 않습니다. 새 폴더를 생성합니다..."
+  mkdir -p "/Users/Shared/test/Camera"
+fi
+
+#!/bin/bash
+
+# ADB로 Camera 폴더의 사진 파일 복사
+echo "Camera 폴더의 사진 파일 복사 중..."
+adb shell ls /sdcard/DCIM/Camera/*.jpg &>/dev/null
+
+if [ $? -ne 0 ]; then
+  echo "Camera 폴더에서 JPG 파일을 찾을 수 없습니다."
+else
+  FILES=$(adb shell ls /sdcard/DCIM/Camera/*.jpg)
+  for FILE in $FILES; do
+    FILE=$(echo $FILE | tr -d '\r')
+    STAT_OUTPUT=$(adb shell stat "$FILE")
+    
+    # Modify 날짜 추출
+    MODIFY_LINE=$(echo "$STAT_OUTPUT" | grep 'Modify')
+    MODIFY_DATE=$(echo "$MODIFY_LINE" | awk '{print $2}')
+    MODIFY_TIME=$(echo "$MODIFY_LINE" | awk '{print $3}' | cut -d'.' -f1)
+    
+    # 파일 이름 변경: YYYYMMDD_HHMMSS.jpg
+    NEW_FILENAME="${MODIFY_DATE//-/}_${MODIFY_TIME//:/}.jpg"
+    adb pull "$FILE" "/Users/Shared/test/Camera/$NEW_FILENAME"
+    
+    if [ $? -eq 0 ]; then
+      echo "파일 다운로드 완료: $NEW_FILENAME"
+    else
+      echo "파일 다운로드 실패: $FILE"
+    fi
+  done
+fi
+
+# SNOW 폴더 존재 여부 확인 및 복사
+echo "SNOW 폴더 확인 중..."
+adb shell "[ -d /sdcard/DCIM/Camera/SNOW ]" &>/dev/null
+
+if [ $? -eq 0 ]; then
+  echo "SNOW 폴더가 발견되었습니다. 파일 복사 중..."
+
+  FILES=$(adb shell ls /sdcard/DCIM/Camera/SNOW/*.jpg)
+  for FILE in $FILES; do
+    FILE=$(echo $FILE | tr -d '\r')
+    STAT_OUTPUT=$(adb shell stat "$FILE")
+    
+    # Modify 날짜 추출
+    MODIFY_LINE=$(echo "$STAT_OUTPUT" | grep 'Modify')
+    MODIFY_DATE=$(echo "$MODIFY_LINE" | awk '{print $2}')
+    MODIFY_TIME=$(echo "$MODIFY_LINE" | awk '{print $3}' | cut -d'.' -f1)
+    
+    # 파일 이름 변경: YYYYMMDD_HHMMSS.jpg
+    NEW_FILENAME="${MODIFY_DATE//-/}_${MODIFY_TIME//:/}.jpg"
+    adb pull "$FILE" "/Users/Shared/test/Camera/$NEW_FILENAME"
+    
+    if [ $? -eq 0 ]; then
+      echo "파일 다운로드 완료: $NEW_FILENAME"
+    else
+      echo "파일 다운로드 실패: $FILE"
+    fi
+  done
+else
+  echo "SNOW 폴더가 존재하지 않습니다."
+fi
+
+echo "모든 사진 파일 복사 완료!"
+
+
+# 5. 휴지통 폴더 복사
+echo "휴지통 폴더 복사 중..."
+TRASH_FOLDER="/sdcard/Android/data/com.sec.android.gallery3d/files/.Trash"
+LOCAL_SAVE_PATH="/Users/Shared/test/Trash"  # PC에 저장할 폴더
+
+# 폴더가 없으면 생성
+if [ ! -d "$LOCAL_SAVE_PATH" ]; then
+  echo "로컬 저장 폴더 생성 중: $LOCAL_SAVE_PATH"
+  mkdir -p "$LOCAL_SAVE_PATH"
+fi
+
+# ADB로 휴지통 파일 목록 가져오기
+echo "휴지통 파일 목록 가져오는 중..."
+FILES=$(adb shell ls "$TRASH_FOLDER")
+
+if [ $? -ne 0 ]; then
+  echo "ADB 명령어 실패: 휴지통 파일 목록을 가져올 수 없습니다."
+  exit 1
+fi
+
+# 파일 처리 시작
+for FILE in $FILES; do
+  FILE=$(echo $FILE | tr -d '\r')  # Windows 줄바꿈 제거
+
+  if [ -z "$FILE" ]; then
+    continue
+  fi
+
+  # ADB로 파일의 stat 정보 가져오기
+  echo "파일 정보 확인 중: $FILE"
+  STAT_OUTPUT=$(adb shell stat "$TRASH_FOLDER/$FILE")
+  
+  if [ $? -ne 0 ]; then
+    echo "파일 $FILE의 stat 정보 가져오기 실패."
+    continue
+  fi
+
+  # Modify 날짜 추출 (필요한 부분만 추출)
+  MODIFY_LINE=$(echo "$STAT_OUTPUT" | grep 'Modify')
+  MODIFY_DATE=$(echo "$MODIFY_LINE" | awk '{print $2}')  # YYYY-MM-DD
+  MODIFY_TIME=$(echo "$MODIFY_LINE" | awk '{print $3}' | cut -d'.' -f1)  # HH:MM:SS (소수점 제거)
+
+  if [ -z "$MODIFY_DATE" ] || [ -z "$MODIFY_TIME" ]; then
+    echo "파일 $FILE의 생성 날짜를 찾을 수 없습니다."
+    continue
+  fi
+
+  # 날짜 포맷 변환: YYYY-MM-DD HH:MM:SS -> YYYYMMDD_HHMMSS
+  NEW_FILENAME="${MODIFY_DATE//-/}_${MODIFY_TIME//:/}.jpg"
+
+  echo "새 파일 이름: $NEW_FILENAME"
+
+  # 로컬로 파일 다운로드
+  adb pull "$TRASH_FOLDER/$FILE" "$LOCAL_SAVE_PATH/$NEW_FILENAME"
+
+  if [ $? -eq 0 ]; then
+    echo "파일 다운로드 완료: $NEW_FILENAME"
+  else
+    echo "파일 다운로드 실패: $FILE"
+  fi
+done
+
+echo "휴지통 파일 복사 완료"
+
+# 4. EXIF GPS 데이터 추출
+if [ ! -d "/Users/Shared/test/metadata" ]; then
+  echo "metadata 폴더가 존재하지 않습니다. 새 폴더를 생성합니다..."
+  mkdir "/Users/Shared/test/metadata"
+fi
+
+echo "EXIF 데이터 추출 중...1"
+
+for f in /Users/Shared/test/Camera/*.jpg; do
+  filename=$(basename "$f" .jpg)
+  exiftool -gps* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
+done
+
+if [ $? -ne 0 ]; then
+  echo "EXIF 데이터 추출 실패1"
+else
+  echo "EXIF 데이터 추출 완료1"
+fi
+
+
+echo "EXIF 데이터 추출 중...2"
+
+for f in /Users/Shared/test/Trash/*.jpg; do
+  filename=$(basename "$f" .jpg)
+  exiftool -gps* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
+done
+
+if [ $? -ne 0 ]; then
+  echo "EXIF 데이터 추출 실패2"
+else
+  echo "EXIF 데이터 추출 완료2"
+fi
+
+# 8. 네이버 MYBOX 캐시파일 복사
+echo "네이버 MYBOX 캐시파일 복사 중..."
+# ADB Temp 폴더 경로
+TEMP_FOLDER="/sdcard/Android/data/com.nhn.android.ndrive/cache/temp"
+LOCAL_SAVE_PATH="/Users/Shared/test/MYBOX_cache"  # PC에 저장할 폴더
+
+# 폴더가 없으면 생성
+if [ ! -d "$LOCAL_SAVE_PATH" ]; then
+  echo "로컬 저장 폴더 생성 중: $LOCAL_SAVE_PATH"
+  mkdir -p "$LOCAL_SAVE_PATH"
+fi
+
+# ADB로 Temp 폴더에서 모든 파일 및 하위 폴더 목록 가져오기
+echo "Temp 폴더의 모든 파일 탐색 중..."
+FILES=$(adb shell find "$TEMP_FOLDER" -type f -name "*.jpg")
+
+if [ $? -ne 0 ]; then
+  echo "ADB 명령어 실패: Temp 폴더의 파일 목록을 가져올 수 없습니다."
+  exit 1
+fi
+
+# 파일 처리 시작
+for FILE in $FILES; do
+  FILE=$(echo $FILE | tr -d '\r')  # Windows 줄바꿈 제거
+
+  if [ -z "$FILE" ]; then
+    continue
+  fi
+
+  # ADB로 파일의 stat 정보 가져오기
+  echo "파일 정보 확인 중: $FILE"
+  STAT_OUTPUT=$(adb shell stat "$FILE")
+  
+  if [ $? -ne 0 ]; then
+    echo "파일 $FILE의 stat 정보 가져오기 실패."
+    continue
+  fi
+
+  # Modify 날짜 추출
+  MODIFY_LINE=$(echo "$STAT_OUTPUT" | grep 'Modify')
+  MODIFY_DATE=$(echo "$MODIFY_LINE" | awk '{print $2}')  # YYYY-MM-DD
+  MODIFY_TIME=$(echo "$MODIFY_LINE" | awk '{print $3}' | cut -d'.' -f1)  # HH:MM:SS (소수점 제거)
+
+  if [ -z "$MODIFY_DATE" ] || [ -z "$MODIFY_TIME" ]; then
+    echo "파일 $FILE의 수정 날짜를 찾을 수 없습니다."
+    continue
+  fi
+
+  # 날짜 포맷 변환: YYYY-MM-DD HH:MM:SS -> YYYYMMDD_HHMMSS
+  NEW_FILENAME="${MODIFY_DATE//-/}_${MODIFY_TIME//:/}.jpg"
+
+  echo "새 파일 이름: $NEW_FILENAME"
+
+  # 로컬로 파일 다운로드
+  adb pull "$FILE" "$LOCAL_SAVE_PATH/$NEW_FILENAME"
+
+  if [ $? -eq 0 ]; then
+    echo "파일 다운로드 완료: $NEW_FILENAME"
+  else
+    echo "파일 다운로드 실패: $FILE"
+  fi
+done
+
+echo "네이버 MYBOX 캐시파일 복사 완료!"
+
+
+# 9. 소다 앱 임시 사진 파일 복사
+echo "소다 앱 캐시파일 복사 중..."
+
+# ADB Temp 폴더 경로
+TEMP_FOLDER="/sdcard/Android/data/com.snowcorp.soda.android/files/temp"
+LOCAL_SAVE_PATH="/Users/Shared/test/Soda_cache"  # PC에 저장할 폴더
+
+# 폴더가 없으면 생성
+if [ ! -d "$LOCAL_SAVE_PATH" ]; then
+  echo "로컬 저장 폴더 생성 중: $LOCAL_SAVE_PATH"
+  mkdir -p "$LOCAL_SAVE_PATH"
+fi
+
+# ADB로 Temp 폴더에서 JPG 파일 목록 가져오기
+echo "Temp 폴더의 JPG 파일 목록 가져오는 중..."
+FILES=$(adb shell ls "$TEMP_FOLDER" | grep "\.jpg$")
+
+if [ $? -ne 0 ]; then
+  echo "ADB 명령어 실패: Temp 폴더의 JPG 파일 목록을 가져올 수 없습니다."
+  exit 1
+fi
+
+# 파일 처리 시작
+for FILE in $FILES; do
+  FILE=$(echo $FILE | tr -d '\r')  # Windows 줄바꿈 제거
+
+  if [ -z "$FILE" ]; then
+    continue
+  fi
+
+  # ADB로 파일의 stat 정보 가져오기
+  echo "파일 정보 확인 중: $FILE"
+  STAT_OUTPUT=$(adb shell stat "$TEMP_FOLDER/$FILE")
+  
+  if [ $? -ne 0 ]; then
+    echo "파일 $FILE의 stat 정보 가져오기 실패."
+    continue
+  fi
+
+  # Modify 날짜 추출
+  MODIFY_LINE=$(echo "$STAT_OUTPUT" | grep 'Modify')
+  MODIFY_DATE=$(echo "$MODIFY_LINE" | awk '{print $2}')  # YYYY-MM-DD
+  MODIFY_TIME=$(echo "$MODIFY_LINE" | awk '{print $3}' | cut -d'.' -f1)  # HH:MM:SS (소수점 제거)
+
+  if [ -z "$MODIFY_DATE" ] || [ -z "$MODIFY_TIME" ]; then
+    echo "파일 $FILE의 수정 날짜를 찾을 수 없습니다."
+    continue
+  fi
+
+  # 날짜 포맷 변환: YYYY-MM-DD HH:MM:SS -> YYYYMMDD_HHMMSS
+  NEW_FILENAME="${MODIFY_DATE//-/}_${MODIFY_TIME//:/}.jpg"
+
+  echo "새 파일 이름: $NEW_FILENAME"
+
+  # 로컬로 파일 다운로드
+  adb pull "$TEMP_FOLDER/$FILE" "$LOCAL_SAVE_PATH/$NEW_FILENAME"
+
+  if [ $? -eq 0 ]; then
+    echo "파일 다운로드 완료: $NEW_FILENAME"
+  else
+    echo "파일 다운로드 실패: $FILE"
+  fi
+done
+
+echo "소다 앱 캐시 파일 복사 완료!"
+
+# 11. 카메라 촬영 완료 로그 복사
+echo "촬영 완료 로그 복사 중..."
+adb logcat -d > temp_log.txt
+grep "onCaptureCompleted" temp_log.txt > "/Users/Shared/test/picture_taken_log.txt"
+
+if [ $? -ne 0 ]; then
+  echo "촬영 완료 로그를 찾을 수 없습니다."
+else
+  echo "촬영 완료 로그를 picture_taken_log.txt에 저장하였습니다."
+fi
+
+rm temp_log.txt
+
+# 13. Wi-Fi SSID/BSSID 로그 복사
+echo "Wi-Fi SSID/BSSID 로그 복사 중..."
+adb shell dumpsys wifi > temp_wifi.txt
+grep "BSSID" temp_wifi.txt | grep -E "wifiState=WIFI_ASSOCIATED|wifiState=WIFI_DISCONNECTED" > "/Users/Shared/test/wifi_log.txt"
+
+if [ $? -ne 0 ]; then
+  echo "Wi-Fi SSID/BSSID 로그를 찾을 수 없습니다."
+else
+  echo "Wi-Fi SSID/BSSID 로그를 wifi_log.txt에 저장하였습니다."
+fi
+
+rm temp_wifi.txt
+
+# 14-17. 앱 실행 로그 추출 (Snow, Soda, MYBOX, Drive)
+apps=("com.campmobile.snow" "com.snowcorp.soda.android" "com.nhn.android.ndrive" "com.google.android.apps.docs")
+logs=("snow_usage_log.txt" "soda_usage_log.txt" "mybox_usage_log.txt" "drive_usage_log.txt")
+
+adb shell dumpsys usagestats > temp_usagestats.txt
+
+for i in "${!apps[@]}"; do
+  app=${apps[$i]}
+  log="/Users/Shared/test/${logs[$i]}"
+  
+  grep "$app" temp_usagestats.txt | grep "ACTIVITY_RESUMED" > /dev/null
+  resumed=$?
+
+  grep "$app" temp_usagestats.txt | grep "ACTIVITY_PAUSED" > /dev/null
+  paused=$?
+
+  if [ $resumed -eq 0 ] && [ $paused -eq 0 ]; then
+    grep "$app" temp_usagestats.txt | grep "ACTIVITY_RESUMED" > "$log"
+    grep "$app" temp_usagestats.txt | grep "ACTIVITY_PAUSED" >> "$log"
+    echo "$app 로그가 $log에 저장되었습니다."
+  else
+    echo "$app 실행 로그를 찾을 수 없습니다."
+  fi
+done
+
+rm temp_usagestats.txt
+
+echo "작업 완료!"

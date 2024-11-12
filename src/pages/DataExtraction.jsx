@@ -8,6 +8,7 @@ import Modal from '../components/dataExtraction/Modal';
 import { useState, useEffect } from 'react';
 
 const DataExtraction = () => {
+  const { ipcRenderer } = window;
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -17,6 +18,7 @@ const DataExtraction = () => {
     setIsModalOpen(true);
     startTimer();
     localStorage.setItem('isExtracted', JSON.stringify(true));
+    ipcRenderer.send('execute-batch');
   };
 
   const closeModal = () => {

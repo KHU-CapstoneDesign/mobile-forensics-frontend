@@ -154,9 +154,13 @@ app.on('activate', () => {
 ipcMain.on('execute-batch', event => {
   console.log('배치파일실행');
 
-  const batchPath = path.join(__dirname, 'script.sh');
+  const batchPathMac = path.join(__dirname, 'batch');
+  const batchPathWindows = path.join(__dirname, 'batch.bat');
+
   const isWindows = process.platform === 'win32';
-  const command = isWindows ? `cmd /c "${batchPath}"` : `sh ${batchPath}`; // Unix 환경에 맞게 수정
+  const command = isWindows
+    ? `cmd /c "${batchPathWindows}"`
+    : `sh ${batchPathMac}`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {

@@ -36,7 +36,7 @@ const Wrapper = styled.button`
   border: 1px solid #2c2c2c;
   border-radius: 8px;
   width: ${props => props.width || 'auto'};
-  height: ${props => props.height || 'auto'};
+  min-height: ${props => props.height || 'auto'};
   font-size: ${props => props.fontSize || '16px'};
   cursor: pointer;
   &:hover {
