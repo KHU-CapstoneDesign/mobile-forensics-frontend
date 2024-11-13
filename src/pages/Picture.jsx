@@ -5,6 +5,7 @@ import PictureCard from '../components/result/PictureCard';
 import SampleImg from '../assets/images/sample.png';
 import { useState, useEffect } from 'react';
 import ImageModal from '../components/result/ImageModal';
+import { useLocation } from 'react-router-dom';
 
 const DATA = [
   { id: 1, picture: SampleImg, title: '사진1', time: '15:13:30' },
@@ -15,23 +16,6 @@ const DATA = [
   { id: 6, picture: SampleImg, title: '사진6', time: '15:13:30' },
   { id: 7, picture: SampleImg, title: '사진7', time: '15:13:30' },
 ];
-
-const Children = ({ time, number }) => {
-  return (
-    <div
-      style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-    >
-      범행 시간대
-      <div style={{ color: '#6c6c6c', fontSize: '16px' }}>({time})</div>에 찍힌
-      사진이&nbsp;
-      <div style={{ color: 'red', fontWeight: '900', fontSize: '23px' }}>
-        {' '}
-        {number}
-      </div>
-      개 발견되었습니다
-    </div>
-  );
-};
 
 const Picture = () => {
   const [time, setTime] = useState('');
@@ -70,9 +54,7 @@ const Picture = () => {
       )}
       <Layout>
         <Wrapper>
-          <Detail>
-            <Children time={time} number={1} />
-          </Detail>
+          <Detail time={time} number={1}></Detail>
           <CardSection>
             {DATA.map(item => (
               <PictureCard

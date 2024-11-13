@@ -49,6 +49,8 @@ const App = () => {
           <Route path="/input" element={<InputPage />}></Route>
           <Route path="/result" element={<Result />}></Route>
           <Route path="/result/pictures" element={<Picture />}></Route>
+          <Route path="/result/myboxCache" element={<Picture />}></Route>
+          <Route path="/result/sodaCache" element={<Picture />}></Route>
         </Routes>
       </BrowserRouter>
     </Root>

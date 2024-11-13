@@ -1,9 +1,46 @@
 import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-const Detail = ({ children }) => {
+const Detail = ({ time, number }) => {
+  const location = useLocation();
+  const [type, setType] = useState('');
+  useEffect(() => {
+    setType(
+      location.pathname.includes('pictures')
+        ? 'pictures'
+        : location.pathname.includes('myboxCache')
+          ? 'mybox'
+          : 'soda',
+    );
+  }, [location]);
   return (
     <Wrapper>
-      <Child>{children}</Child>
+      <Child>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          범행 시간대
+          <div style={{ color: '#6c6c6c', fontSize: '16px' }}>
+            ({time})
+          </div>{' '}
+          {type === 'pictures'
+            ? '에 찍힌 사진이'
+            : type === 'mybox'
+              ? '에 MYBOX 앱에 업로드한 사진이'
+              : '에 SODA 앱으로 찍고 삭제한 사진이'}
+          &nbsp;
+          <div style={{ color: 'red', fontWeight: '900', fontSize: '23px' }}>
+            {' '}
+            {number}
+          </div>
+          개 발견되었습니다
+        </div>
+      </Child>
     </Wrapper>
   );
 };

@@ -64,6 +64,10 @@ const Result = () => {
   const handleClick = id => {
     if (id === 1) {
       navigate('/result/pictures');
+    } else if (id === 4) {
+      navigate('/result/myboxCache');
+    } else if (id === 5) {
+      navigate('/result/sodaCache');
     }
   };
 
