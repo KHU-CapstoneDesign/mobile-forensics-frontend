@@ -1,10 +1,26 @@
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from '../../assets/svgs/close.svg';
+import { useEffect, useRef } from 'react';
 
 const ImageModal = ({ picture, title, onClose }) => {
+  const modalRef = useRef(null);
+
+  const handleClickOutside = event => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <Overlay>
-      <Wrapper>
+      <Wrapper ref={modalRef}>
         <IconWrap onClick={onClose}>
           <CloseIcon width={30} height={30} fill={'#2c2c2c'} />
         </IconWrap>
