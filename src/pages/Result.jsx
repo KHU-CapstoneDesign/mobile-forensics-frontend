@@ -52,7 +52,7 @@ const Wrap = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 50px;
-  margin: 60px;
+  margin: 60px 0px;
 `;
 
 const Title = styled.div`

@@ -42,7 +42,7 @@ const Content = styled.div`
 
 const Title = styled.div`
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 900;
 `;
 
 const Desc = styled.div`

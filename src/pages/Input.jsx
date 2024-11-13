@@ -140,10 +140,24 @@ const InputPage = () => {
       const formattedDateTime = dayjs(selectedDateTime).format(
         'YYYY-MM-DD HH:mm:ss',
       );
+
+      // 날짜 분리
+      const formattedDate = formattedDateTime.split(' ')[0];
+      // 시간 분리
+      const formattedTime = formattedDateTime.split(' ')[1];
+
+      // 장소의 좌표 얻기
       const data = await getLocation();
       console.log(
         `post data: ${data.longitude}, ${data.latitude}\n${formattedDateTime}`,
       );
+
+      // 로컬 스토리지에 input값들 저장
+      window.localStorage.setItem('date', formattedDate);
+      window.localStorage.setItem('time', formattedTime);
+      window.localStorage.setItem('longitude', data.longitude);
+      window.localStorage.setItem('latitude', data.latitude);
+
       navigate('/result');
     }
   };
