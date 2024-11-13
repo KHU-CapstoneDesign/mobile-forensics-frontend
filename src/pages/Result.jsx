@@ -107,8 +107,8 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
-  margin: 60px 0px;
+  gap: 20px;
+  margin: 50px 0px;
 `;
 
 const Title = styled.div`
