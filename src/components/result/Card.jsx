@@ -2,14 +2,19 @@ import styled from 'styled-components';
 import { ReactComponent as WarningIcon } from '../../assets/svgs/warning.svg';
 import Button from '../common/Button';
 
-const Card = () => {
+const Card = ({ title, desc, onClick }) => {
   return (
     <Wrapper>
       <WarningIcon />
       <Content>
-        <Title>사진 발견</Title>
-        <Desc>범행과 관련된 사진이 존재합니다.</Desc>
-        <Button width={'103px'} height={'40px'} fontSize={'16px'}>
+        <Title>{title}</Title>
+        <Desc>{desc}</Desc>
+        <Button
+          onClick={onClick}
+          width={'103px'}
+          height={'40px'}
+          fontSize={'16px'}
+        >
           자세히 보기
         </Button>
       </Content>
@@ -20,7 +25,7 @@ const Card = () => {
 export default Card;
 
 const Wrapper = styled.div`
-  width: 390px;
+  width: 410px;
   height: 113px;
   padding: 24px;
   display: flex;

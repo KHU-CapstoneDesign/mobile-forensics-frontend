@@ -2,8 +2,52 @@ import Layout from '../components/layout/Layout';
 import styled from 'styled-components';
 import Card from '../components/result/Card';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const DATA = [1, 2, 3, 4];
+const DATA = [
+  {
+    id: 1,
+    name: 'picture',
+    title: '사진 발견',
+    desc: '범행 시간대에 찍힌 사진이 존재합니다.',
+  },
+  {
+    id: 2,
+    name: 'taken',
+    title: '사진 촬영 로그 발견',
+    desc: '범행 시간대에 사진을 촬영한 로그가 존재합니다.',
+  },
+  {
+    id: 3,
+    name: 'gps',
+    title: '위치 근접',
+    desc: '범행 장소와 인접한 GPS 기록이 존재합니다.',
+  },
+  {
+    id: 4,
+    name: 'mybox-cache',
+    title: '클라우드 업로드 흔적 발견',
+    desc: 'MYBOX에 사진을 업로드한 흔적이 존재합니다',
+  },
+  {
+    id: 5,
+    name: 'soda-cache',
+    title: '사진 삭제 흔적 발견',
+    desc: 'SODA로 사진을 찍고 삭제한 흔적이 존재합니다.',
+  },
+  {
+    id: 6,
+    name: 'cloud-app',
+    title: '클라우드 앱 사용 기록 발견',
+    desc: '범행 시간대에 클라우드 앱을 사용한 기록이 존재합니다.',
+  },
+  {
+    id: 7,
+    name: 'camera-app',
+    title: '카메라 앱 사용 기록 발견',
+    desc: '범행 시간대에 카메라 앱을 사용한 기록이 존재합니다.',
+  },
+];
 
 const levelMap = {
   5: '매우 높음',
@@ -14,7 +58,14 @@ const levelMap = {
 };
 
 const Result = () => {
+  const navigate = useNavigate();
   const [level, setLevel] = useState(5);
+
+  const handleClick = id => {
+    if (id === 1) {
+      navigate('/result/pictures');
+    }
+  };
 
   return (
     <Layout>
@@ -24,7 +75,12 @@ const Result = () => {
           <ResultBox level={level}>{levelMap[level]}</ResultBox>
           <CardSection>
             {DATA.map(item => (
-              <Card key={item} />
+              <Card
+                key={item.id}
+                title={item.title}
+                desc={item.desc}
+                onClick={() => handleClick(item.id)}
+              />
             ))}
           </CardSection>
         </Wrap>

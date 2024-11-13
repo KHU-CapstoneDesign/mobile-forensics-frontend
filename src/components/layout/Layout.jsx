@@ -8,7 +8,9 @@ const Layout = ({ children }) => {
   const [url, setUrl] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(''); // 페이지 제목
+  const [date, setDate] = useState(''); // 포렌식할 날짜
+  const [type, setType] = useState(''); // 상세 페이지 타입
 
   useEffect(() => {
     setUrl(location.pathname);
@@ -18,6 +20,10 @@ const Layout = ({ children }) => {
       location.pathname.startsWith('/input') ||
       location.pathname.startsWith('/result')
     ) {
+      if (location.pathname.startsWith('/result/pictures')) {
+        setType('사진');
+      }
+      setDate(window.localStorage.getItem('date'));
       setTitle('포렌식 결과');
     }
   }, [location]);
@@ -46,7 +52,18 @@ const Layout = ({ children }) => {
             </div>
             <Logo>Forensics</Logo>
           </TouchArea>
-          <Title>{title}</Title>
+          <TextSection>
+            <Title>{title}</Title>
+            {type ? (
+              <>
+                <Date>({date})</Date>
+                <Split />
+                <Title>{type}</Title>
+              </>
+            ) : (
+              ''
+            )}
+          </TextSection>
         </Navbar>
         <ChildrenWrapper id="children-wrapper">
           {url.startsWith('/main') ? (
@@ -110,8 +127,26 @@ const IconWrap = styled.div`
   top: 10px;
 `;
 
+const TextSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+`;
+
 const Title = styled.div`
   color: #d9d9d9;
-  padding-top: 5px;
   font-size: 20px;
+`;
+
+const Date = styled.div`
+  color: #d9d9d9;
+  font-size: 16px;
+  margin-left: 7px;
+`;
+
+const Split = styled.div`
+  width: 1px;
+  height: 20px;
+  background-color: #757575;
+  margin: 0px 15px;
 `;
