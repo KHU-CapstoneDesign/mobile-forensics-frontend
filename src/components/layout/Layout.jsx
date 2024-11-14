@@ -22,6 +22,8 @@ const Layout = ({ children }) => {
     ) {
       if (location.pathname.startsWith('/result/pictures')) {
         setType('사진');
+      } else if (location.pathname.startsWith('/result/cameraLog')) {
+        setType('사진 촬영 로그');
       } else if (location.pathname.startsWith('/result/myboxCache')) {
         setType('MYBOX 앱 캐시 파일');
       } else if (location.pathname.startsWith('/result/sodaCache')) {

@@ -11,7 +11,11 @@ const Detail = ({ time, number }) => {
         ? 'pictures'
         : location.pathname.includes('myboxCache')
           ? 'mybox'
-          : 'soda',
+          : location.pathname.includes('sodaCache')
+            ? 'soda'
+            : location.pathname.includes('cameraLog')
+              ? 'cameraLog'
+              : '',
     );
   }, [location]);
   return (
@@ -32,7 +36,9 @@ const Detail = ({ time, number }) => {
             ? '에 찍힌 사진이'
             : type === 'mybox'
               ? '에 MYBOX 앱에 업로드한 사진이'
-              : '에 SODA 앱으로 찍고 삭제한 사진이'}
+              : type === 'soda'
+                ? '에 SODA 앱으로 찍고 삭제한 사진이'
+                : '에 기록된 사진 촬영 로그가'}
           &nbsp;
           <div style={{ color: 'red', fontWeight: '900', fontSize: '23px' }}>
             {' '}

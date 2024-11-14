@@ -13,7 +13,7 @@ const DATA = [
   },
   {
     id: 2,
-    name: 'taken',
+    name: 'camera-log',
     title: '사진 촬영 로그 발견',
     desc: '범행 시간대에 사진을 촬영한 로그가 존재합니다.',
   },
@@ -64,6 +64,8 @@ const Result = () => {
   const handleClick = id => {
     if (id === 1) {
       navigate('/result/pictures');
+    } else if (id === 2) {
+      navigate('/result/cameraLog');
     } else if (id === 4) {
       navigate('/result/myboxCache');
     } else if (id === 5) {
