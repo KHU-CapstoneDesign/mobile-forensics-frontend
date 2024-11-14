@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const Detail = ({ time, number }) => {
+const Detail = ({ time, number, longtitude, latitude }) => {
   const location = useLocation();
   const [type, setType] = useState('');
   useEffect(() => {
@@ -15,7 +15,9 @@ const Detail = ({ time, number }) => {
             ? 'soda'
             : location.pathname.includes('cameraLog')
               ? 'cameraLog'
-              : '',
+              : location.pathname.includes('gps')
+                ? 'gps'
+                : '',
     );
   }, [location]);
   return (
@@ -29,16 +31,30 @@ const Detail = ({ time, number }) => {
           }}
         >
           범행 시간대
-          <div style={{ color: '#6c6c6c', fontSize: '16px' }}>
-            ({time})
-          </div>{' '}
-          {type === 'pictures'
-            ? '에 찍힌 사진이'
-            : type === 'mybox'
-              ? '에 MYBOX 앱에 업로드한 사진이'
-              : type === 'soda'
-                ? '에 SODA 앱으로 찍고 삭제한 사진이'
-                : '에 기록된 사진 촬영 로그가'}
+          <div style={{ color: '#6c6c6c', fontSize: '16px' }}>({time})</div>
+          {type === 'pictures' ? (
+            '에 찍힌 사진이'
+          ) : type === 'mybox' ? (
+            '에 MYBOX 앱에 업로드한 사진이'
+          ) : type === 'soda' ? (
+            '에 SODA 앱으로 찍고 삭제한 사진이'
+          ) : type === 'cameraLog' ? (
+            '에 기록된 사진 촬영 로그가'
+          ) : (
+            <>
+              에 범행 장소
+              <div
+                style={{
+                  color: '#6c6c6c',
+                  fontSize: '16px',
+                  display: 'inline',
+                }}
+              >
+                ({latitude}, {longtitude})
+              </div>
+              와 근접한 위치 기록이
+            </>
+          )}
           &nbsp;
           <div style={{ color: 'red', fontWeight: '900', fontSize: '23px' }}>
             {' '}

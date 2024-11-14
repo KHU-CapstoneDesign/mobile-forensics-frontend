@@ -148,6 +148,10 @@ const InputPage = () => {
 
       // 장소의 좌표 얻기
       const data = await getLocation();
+      const longitude = parseFloat(data.longitude);
+      const latitude = parseFloat(data.latitude);
+      const formattedLongitude = longitude.toFixed(6);
+      const formattedLatitude = latitude.toFixed(6);
       console.log(
         `post data: ${data.longitude}, ${data.latitude}\n${formattedDateTime}`,
       );
@@ -155,8 +159,8 @@ const InputPage = () => {
       // 로컬 스토리지에 input값들 저장
       window.localStorage.setItem('date', formattedDate);
       window.localStorage.setItem('time', formattedTime);
-      window.localStorage.setItem('longitude', data.longitude);
-      window.localStorage.setItem('latitude', data.latitude);
+      window.localStorage.setItem('longitude', formattedLongitude);
+      window.localStorage.setItem('latitude', formattedLatitude);
 
       navigate('/result');
     }
