@@ -32,9 +32,9 @@ module.exports = {
       },
     ],
   },
-  resolve: {
-    alias: {
-      'react/jsx-runtime': 'react/jsx-runtime.js',
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     'react/jsx-runtime': 'react/jsx-runtime.js',
+  //   },
+  // },
 };
