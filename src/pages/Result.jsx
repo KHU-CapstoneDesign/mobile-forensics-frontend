@@ -66,6 +66,8 @@ const Result = () => {
       navigate('/result/pictures');
     } else if (id === 2) {
       navigate('/result/cameraLog');
+    } else if (id === 3) {
+      navigate('/result/gps');
     } else if (id === 4) {
       navigate('/result/myboxCache');
     } else if (id === 5) {

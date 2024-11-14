@@ -28,6 +28,8 @@ const Layout = ({ children }) => {
         setType('MYBOX 앱 캐시 파일');
       } else if (location.pathname.startsWith('/result/sodaCache')) {
         setType('SODA 앱 캐시 파일');
+      } else if (location.pathname.startsWith('/result/gps')) {
+        setType('GPS');
       }
       setDate(window.localStorage.getItem('date'));
       setTitle('포렌식 결과');

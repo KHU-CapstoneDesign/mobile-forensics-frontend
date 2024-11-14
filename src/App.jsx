@@ -8,6 +8,7 @@ import InputPage from './pages/Input';
 import Result from './pages/Result';
 import Picture from './pages/Picture';
 import CameraLog from './pages/CameraLog';
+import GPS from './pages/GPS';
 
 const { ipcRenderer } = window;
 
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/result/myboxCache" element={<Picture />}></Route>
           <Route path="/result/sodaCache" element={<Picture />}></Route>
           <Route path="/result/cameraLog" element={<CameraLog />}></Route>
+          <Route path="/result/gps" element={<GPS />}></Route>
         </Routes>
       </BrowserRouter>
     </Root>

@@ -77,7 +77,6 @@ const DataExtraction = () => {
                   width={'500px'}
                   height={'50px'}
                   fontSize={'20px'}
-                  alignSelf={'flex-end'}
                   onClick={progress === 100 ? () => navigate(-1) : openModal}
                 >
                   {progress === 100 ? '결과 확인하러 가기' : '데이터 추출하기'}
