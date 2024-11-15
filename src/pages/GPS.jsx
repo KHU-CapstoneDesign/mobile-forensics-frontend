@@ -7,37 +7,6 @@ import MarkerImg from '../assets/images/marker.png';
 import WarningMarkerImg from '../assets/images/markerWarning.png';
 import Detail from '../components/result/Detail';
 
-const DATA = [
-  {
-    title: '장소1',
-    latlng: {
-      lat: window.localStorage.getItem('latitude'),
-      lng: window.localStorage.getItem('longitude') - 0.00009,
-    },
-  },
-  {
-    title: '장소2',
-    latlng: {
-      lat: window.localStorage.getItem('latitude') - 0.00009,
-      lng: window.localStorage.getItem('longitude'),
-    },
-  },
-  {
-    title: '장소3',
-    latlng: {
-      lat: window.localStorage.getItem('latitude'),
-      lng: window.localStorage.getItem('longitude') - 0.00005,
-    },
-  },
-  {
-    title: '장소4',
-    latlng: {
-      lat: window.localStorage.getItem('latitude') - 0.00009,
-      lng: window.localStorage.getItem('longitude') - 0.00009,
-    },
-  },
-];
-
 const GPS = () => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
@@ -54,6 +23,37 @@ const GPS = () => {
 
   // useKakaoLoader();
   const [isHovered, setIsHovered] = useState(false);
+
+  const DATA = [
+    {
+      title: '장소1',
+      latlng: {
+        lat: latitude,
+        lng: longitude - 0.00009,
+      },
+    },
+    {
+      title: '장소2',
+      latlng: {
+        lat: window.localStorage.getItem('latitude') - 0.00009,
+        lng: window.localStorage.getItem('longitude'),
+      },
+    },
+    {
+      title: '장소3',
+      latlng: {
+        lat: window.localStorage.getItem('latitude'),
+        lng: window.localStorage.getItem('longitude') - 0.00005,
+      },
+    },
+    {
+      title: '장소4',
+      latlng: {
+        lat: window.localStorage.getItem('latitude') - 0.00009,
+        lng: window.localStorage.getItem('longitude') - 0.00009,
+      },
+    },
+  ];
 
   return (
     <Layout>
@@ -133,12 +133,12 @@ const GPS = () => {
               </div>
             </CustomOverlayMap>
           )}
-          {DATA.map((position, index) => {
-            // console.log(position.title, position.latlng);
+          {DATA?.map((position, index) => {
+            console.log(position.title, position.latlng);
             return (
               <MapMarker
                 key={`${position.title}-${position.latlng}`}
-                position={position.latlng} // 마커를 표시할 위치
+                position={position?.latlng} // 마커를 표시할 위치
                 image={{
                   src: WarningMarkerImg, // 마커이미지의 주소입니다
                   size: {
