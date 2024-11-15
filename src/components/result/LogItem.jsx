@@ -4,7 +4,7 @@ const LogItem = ({ $result, $isLast, children }) => {
   return (
     <Wrapper $result={$result} $isLast={$isLast}>
       <Icon>
-        <Circle />
+        <Circle $result={$result} />
         {`${children} 촬영`}
       </Icon>
       {$isLast ? '' : <Bar />}
@@ -32,7 +32,7 @@ const Circle = styled.div`
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background-color: #bdbdbd;
+  background-color: ${props => (props.$result ? '#D32F2F' : '#bdbdbd')};
 `;
 
 const Bar = styled.div`
