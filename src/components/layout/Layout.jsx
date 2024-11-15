@@ -1,16 +1,19 @@
 import styled from 'styled-components';
 import { ReactComponent as CameraIcon } from '../../assets/svgs/camera.svg';
 import { ReactComponent as BackIcon } from '../../assets/svgs/back.svg';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 const Layout = ({ children }) => {
+  const params = useParams();
+
   const [url, setUrl] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
   const [title, setTitle] = useState(''); // 페이지 제목
   const [date, setDate] = useState(''); // 포렌식할 날짜
   const [type, setType] = useState(''); // 상세 페이지 타입
+  const [app, setApp] = useState(''); // 앱 이름 (앱 사용 기록 페이지)
 
   useEffect(() => {
     setUrl(location.pathname);
@@ -30,6 +33,16 @@ const Layout = ({ children }) => {
         setType('SODA 앱 캐시 파일');
       } else if (location.pathname.startsWith('/result/gps')) {
         setType('GPS');
+      } else if (location.pathname.startsWith('/result/usage/cloud')) {
+        if (location.pathname.startsWith('/result/usage/cloud/')) {
+          setApp(params.app);
+        }
+        setType('클라우드 앱 사용 기록');
+      } else if (location.pathname.startsWith('/result/usage/camera')) {
+        if (location.pathname.startsWith('/result/usage/camera/')) {
+          setApp(params.app);
+        }
+        setType('카메라 앱 사용 기록');
       }
       setDate(window.localStorage.getItem('date'));
       setTitle('포렌식 결과');
@@ -67,6 +80,15 @@ const Layout = ({ children }) => {
                 <Date>({date})</Date>
                 <Split />
                 <Title>{type}</Title>
+                {app ? (
+                  <>
+                    {' '}
+                    <Split />
+                    <Title>{app}</Title>
+                  </>
+                ) : (
+                  ''
+                )}
               </>
             ) : (
               ''

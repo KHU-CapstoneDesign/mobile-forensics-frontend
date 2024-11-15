@@ -72,6 +72,10 @@ const Result = () => {
       navigate('/result/myboxCache');
     } else if (id === 5) {
       navigate('/result/sodaCache');
+    } else if (id === 6) {
+      navigate('/result/usage/cloud');
+    } else if (id === 7) {
+      navigate('/result/usage/camera');
     }
   };
 

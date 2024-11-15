@@ -17,7 +17,9 @@ const Detail = ({ time, number, longtitude, latitude }) => {
               ? 'cameraLog'
               : location.pathname.includes('gps')
                 ? 'gps'
-                : '',
+                : location.pathname.includes('usage')
+                  ? 'usage'
+                  : '',
     );
   }, [location]);
   return (
@@ -40,6 +42,8 @@ const Detail = ({ time, number, longtitude, latitude }) => {
             '에 SODA 앱으로 찍고 삭제한 사진이'
           ) : type === 'cameraLog' ? (
             '에 기록된 사진 촬영 로그가'
+          ) : type === 'usage' ? (
+            '에 실행한 기록이'
           ) : (
             <>
               에 범행 장소

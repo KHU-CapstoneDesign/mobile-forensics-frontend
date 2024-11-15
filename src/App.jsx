@@ -9,6 +9,8 @@ import Result from './pages/Result';
 import Picture from './pages/Picture';
 import CameraLog from './pages/CameraLog';
 import GPS from './pages/GPS';
+import Usage from './pages/Usage';
+import UsageDetail from './pages/UsageDetail';
 
 const { ipcRenderer } = window;
 
@@ -55,6 +57,12 @@ const App = () => {
           <Route path="/result/sodaCache" element={<Picture />}></Route>
           <Route path="/result/cameraLog" element={<CameraLog />}></Route>
           <Route path="/result/gps" element={<GPS />}></Route>
+          {/* <Route path="/result/cloudUsage" element={<Usage />}></Route> */}
+          <Route path="/result/usage/:appType" element={<Usage />}></Route>
+          <Route
+            path="/result/usage/:appType/:app"
+            element={<UsageDetail />}
+          ></Route>
         </Routes>
       </BrowserRouter>
     </Root>
