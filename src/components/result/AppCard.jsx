@@ -3,11 +3,11 @@ import Button from '../common/Button';
 
 const AppCard = ({ picture, title, desc, onClick }) => {
   return (
-    <Wrapper onClick={onClick}>
+    <Wrapper>
       <Image src={picture} alt={title} />
       <Title>{title}</Title>
       <Time>{desc}</Time>
-      <Button width={'100px'} height={'40px'}>
+      <Button onClick={onClick} width={'100px'} height={'40px'}>
         자세히 보기
       </Button>
     </Wrapper>
@@ -21,7 +21,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 15px;
-  /* align-items: center; */
   padding: 24px;
   border-radius: 8px;
   border: 1px solid #d9d9d9;
@@ -29,7 +28,6 @@ const Wrapper = styled.div`
     background-color: #f5f5f5;
   }
   width: 300px;
-  /* height: 360px; */
 `;
 
 const Image = styled.img`
