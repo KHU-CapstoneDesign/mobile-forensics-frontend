@@ -6,15 +6,44 @@ import SampleImg from '../assets/images/sample.png';
 import { useState, useEffect } from 'react';
 import ImageModal from '../components/result/ImageModal';
 import { useLocation } from 'react-router-dom';
+import Img1 from '../assets/images/1.jpg';
+import Img2 from '../assets/images/2.jpg';
+import Img3 from '../assets/images/3.jpg';
+import Img4 from '../assets/images/4.jpg';
+import Img5 from '../assets/images/5.jpg';
+import Img6 from '../assets/images/6.jpg';
 
 const DATA = [
-  { id: 1, picture: SampleImg, title: '사진1', time: '15:13:30' },
-  { id: 2, picture: SampleImg, title: '사진2', time: '15:13:30' },
-  { id: 3, picture: SampleImg, title: '사진3', time: '15:13:30' },
-  { id: 4, picture: SampleImg, title: '사진4', time: '15:13:30' },
-  { id: 5, picture: SampleImg, title: '사진5', time: '15:13:30' },
-  { id: 6, picture: SampleImg, title: '사진6', time: '15:13:30' },
-  { id: 7, picture: SampleImg, title: '사진7', time: '15:13:30' },
+  {
+    id: 1,
+    picture: Img1,
+    title: '사진1',
+    time: '12:43:30',
+    result: false,
+  },
+  { id: 2, picture: Img2, title: '사진2', time: '13:05:30', result: true },
+  { id: 3, picture: Img3, title: '사진3', time: '13:16:30', result: true },
+  {
+    id: 4,
+    picture: Img4,
+    title: '사진4',
+    time: '13:17:30',
+    result: false,
+  },
+  {
+    id: 5,
+    picture: Img5,
+    title: '사진5',
+    time: '13:18:30',
+    result: false,
+  },
+  {
+    id: 6,
+    picture: Img6,
+    title: '사진6',
+    time: '13:23:30',
+    result: false,
+  },
 ];
 
 const Picture = () => {
@@ -26,7 +55,7 @@ const Picture = () => {
   });
   const [isOpen, setIsOpen] = useState(false); // 모달
 
-  const handleClick = (id, title, picture) => {
+  const handleClick = (id, title, picture, result) => {
     setSelectedImg({ id: id, title: title, picture: picture });
     openModal();
   };
@@ -62,6 +91,7 @@ const Picture = () => {
                 picture={item.picture}
                 title={item.title}
                 time={item.time}
+                result={item.result}
                 onClick={() => handleClick(item.id, item.title, item.picture)}
               />
             ))}

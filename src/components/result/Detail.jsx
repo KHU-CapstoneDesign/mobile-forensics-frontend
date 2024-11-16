@@ -35,7 +35,7 @@ const Detail = ({ time, number, longtitude, latitude }) => {
           범행 시간대
           <div style={{ color: '#6c6c6c', fontSize: '16px' }}>({time})</div>
           {type === 'pictures' ? (
-            '에 찍힌 사진이'
+            '에 찍힌 유해 사진이'
           ) : type === 'mybox' ? (
             '에 MYBOX 앱에 업로드한 사진이'
           ) : type === 'soda' ? (

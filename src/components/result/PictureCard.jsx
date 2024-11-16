@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-const PictureCard = ({ picture, title, time, onClick }) => {
+const PictureCard = ({ picture, title, time, result, onClick }) => {
   return (
-    <Wrapper onClick={onClick}>
+    <Wrapper result={result} onClick={onClick}>
       <Image src={picture} alt={title} />
       <div style={{ width: '160px' }}>
         <Title>{title}</Title>
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 24px;
   border-radius: 8px;
-  border: 1px solid #d9d9d9;
+  border: ${props => (props.result ? '1px solid red' : '1px solid #d9d9d9')};
   cursor: pointer;
   &:hover {
     background-color: #f5f5f5;
