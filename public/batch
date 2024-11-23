@@ -4,9 +4,19 @@
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# # 1. ADB 및 EXIFTool 다운
+# 1. ADB 및 EXIFTool 다운
 brew list android-platform-tools &>/dev/null || brew install android-platform-tools
 brew list exiftool &>/dev/null || brew install exiftool
+
+# 2. 서버 설정
+SERVER_URL="http://localhost:8080/api/upload"
+
+# 파일 전송 시작 신호 전달
+RESPONSE=$(curl -X POST \
+                 -H "Content-Type: application/json" \
+                 "http://localhost:8080/api/signal?signal='start'")
+echo "파일 시작 신호 응답: $RESPONSE"
+
 
 # 3. 사진 파일 복사
 echo "사진 파일 복사 중..."
@@ -39,8 +49,22 @@ else
     # 파일 이름 변경: YYYYMMDD_HHMMSS.jpg
     NEW_FILENAME="${MODIFY_DATE//-/}_${MODIFY_TIME//:/}.jpg"
     adb pull "$FILE" "/Users/Shared/test/Camera/$NEW_FILENAME"
-    
+
     if [ $? -eq 0 ]; then
+
+      # 파일 전송 후 응답
+      RESPONSE=$(curl -X POST \
+                 -F "file=@/Users/Shared/test/Camera/$NEW_FILENAME" \
+                 -F "parentDir=/Camera" \
+                 "$SERVER_URL")
+
+      if [ $? -eq 0 ]; then
+        echo "파일 전송 성공: $NEW_FILENAME"
+        echo "서버 응답: $RESPONSE"
+      else
+        echo "파일 전송 실패: $NEW_FILENAME"
+      fi
+
       echo "파일 다운로드 완료: $NEW_FILENAME"
     else
       echo "파일 다운로드 실패: $FILE"
@@ -71,6 +95,20 @@ if [ $? -eq 0 ]; then
     
     if [ $? -eq 0 ]; then
       echo "파일 다운로드 완료: $NEW_FILENAME"
+
+      # 파일 전송 후 응답
+      RESPONSE=$(curl -X POST \
+                 -F "file=@/Users/Shared/test/Camera/$NEW_FILENAME" \
+                 -F "parentDir=/Camera" \
+                 "$SERVER_URL")
+
+      if [ $? -eq 0 ]; then
+        echo "파일 전송 성공: $NEW_FILENAME"
+        echo "서버 응답: $RESPONSE"
+      else
+        echo "파일 전송 실패: $NEW_FILENAME"
+      fi
+
     else
       echo "파일 다운로드 실패: $FILE"
     fi
@@ -98,8 +136,9 @@ echo "휴지통 파일 목록 가져오는 중..."
 FILES=$(adb shell ls "$TRASH_FOLDER")
 
 if [ $? -ne 0 ]; then
-  echo "ADB 명령어 실패: 휴지통 파일 목록을 가져올 수 없습니다."
-  exit 1
+  echo "휴지통 파일 복사 실패"
+else
+  echo "휴지통 파일 복사 성공"
 fi
 
 # 파일 처리 시작
@@ -139,6 +178,20 @@ for FILE in $FILES; do
 
   if [ $? -eq 0 ]; then
     echo "파일 다운로드 완료: $NEW_FILENAME"
+
+     # 파일 전송 후 응답
+    RESPONSE=$(curl -X POST \
+                -F "file=@/Users/Shared/test/Trash/$NEW_FILENAME" \
+                -F "parentDir=/Trash" \
+                "$SERVER_URL")
+
+    if [ $? -eq 0 ]; then
+      echo "파일 전송 성공: $NEW_FILENAME"
+      echo "서버 응답: $RESPONSE"
+    else
+      echo "파일 전송 실패: $NEW_FILENAME"
+    fi
+
   else
     echo "파일 다운로드 실패: $FILE"
   fi
@@ -157,6 +210,20 @@ echo "EXIF 데이터 추출 중...1"
 for f in /Users/Shared/test/Camera/*.jpg; do
   filename=$(basename "$f" .jpg)
   exiftool -gps* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
+
+  # 파일 전송 후 응답
+  RESPONSE=$(curl -X POST \
+              -F "file=@/Users/Shared/test/metadata/${filename}_metadata.txt" \
+              -F "parentDir=/test" \
+              "$SERVER_URL")
+
+  if [ $? -eq 0 ]; then
+    echo "파일 전송: $filename"
+    echo "서버 응답: $RESPONSE"
+  else
+    echo "파일 전송 실패: $NEW_FILENAME"
+  fi
+
 done
 
 if [ $? -ne 0 ]; then
@@ -171,6 +238,19 @@ echo "EXIF 데이터 추출 중...2"
 for f in /Users/Shared/test/Trash/*.jpg; do
   filename=$(basename "$f" .jpg)
   exiftool -gps* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
+
+  # 파일 전송 후 응답
+  RESPONSE=$(curl -X POST \
+              -F "file=@/Users/Shared/test/metadata/${filename}_metadata.txt" \
+              -F "parentDir=/test" \
+              "$SERVER_URL")
+
+  if [ $? -eq 0 ]; then
+    echo "파일 전송: $filename"
+    echo "서버 응답: $RESPONSE"
+  else
+    echo "파일 전송 실패: $NEW_FILENAME"
+  fi
 done
 
 if [ $? -ne 0 ]; then
@@ -237,8 +317,22 @@ for FILE in $FILES; do
 
   if [ $? -eq 0 ]; then
     echo "파일 다운로드 완료: $NEW_FILENAME"
+
+    # 파일 전송 후 응답
+    RESPONSE=$(curl -X POST \
+                -F "file=@/Users/Shared/test/MYBOX_cache/$NEW_FILENAME" \
+                -F "parentDir=/MYBOX_cache" \
+                "$SERVER_URL")
+
+    if [ $? -eq 0 ]; then
+      echo "MYBOX 캐시파일 전송 성공: $NEW_FILENAME"
+      echo "서버 응답: $RESPONSE"
+    else
+      echo "MYBOX 캐시파일 전송 실패: $NEW_FILENAME"
+    fi
+
   else
-    echo "파일 다운로드 실패: $FILE"
+    echo "MYBOX 캐시파일 다운로드 실패: $FILE"
   fi
 done
 
@@ -263,8 +357,7 @@ echo "Temp 폴더의 JPG 파일 목록 가져오는 중..."
 FILES=$(adb shell ls "$TEMP_FOLDER" | grep "\.jpg$")
 
 if [ $? -ne 0 ]; then
-  echo "ADB 명령어 실패: Temp 폴더의 JPG 파일 목록을 가져올 수 없습니다."
-  exit 1
+  echo "소다 앱 캐시파일 복사 실패"
 fi
 
 # 파일 처리 시작
@@ -304,8 +397,21 @@ for FILE in $FILES; do
 
   if [ $? -eq 0 ]; then
     echo "파일 다운로드 완료: $NEW_FILENAME"
+
+     # 파일 전송 후 응답
+    RESPONSE=$(curl -X POST \
+                -F "file=@/Users/Shared/test/Soda_cache/$NEW_FILENAME" \
+                -F "parentDir=/Soda_cache" \
+                "$SERVER_URL")
+
+    if [ $? -eq 0 ]; then
+      echo "SODA 캐시파일 전송 성공: $NEW_FILENAME"
+      echo "서버 응답: $RESPONSE"
+    else
+      echo "SODA 캐시파일 전송 실패: $NEW_FILENAME"
+    fi
   else
-    echo "파일 다운로드 실패: $FILE"
+    echo "SODA 캐시파일 다운로드 실패: $FILE"
   fi
 done
 
@@ -320,6 +426,18 @@ if [ $? -ne 0 ]; then
   echo "촬영 완료 로그를 찾을 수 없습니다."
 else
   echo "촬영 완료 로그를 picture_taken_log.txt에 저장하였습니다."
+  # 파일 전송 후 응답
+  RESPONSE=$(curl -X POST \
+              -F "file=@/Users/Shared/test/picture_taken_log.txt" \
+              -F "parentDir=/test" \
+              "$SERVER_URL")
+
+  if [ $? -eq 0 ]; then
+    echo "파일 전송: picture_taken_log.txt"
+    echo "서버 응답: $RESPONSE"
+  else
+    echo "파일 전송 실패: picture_taken_log.txt"
+  fi
 fi
 
 rm temp_log.txt
@@ -333,6 +451,19 @@ if [ $? -ne 0 ]; then
   echo "Wi-Fi SSID/BSSID 로그를 찾을 수 없습니다."
 else
   echo "Wi-Fi SSID/BSSID 로그를 wifi_log.txt에 저장하였습니다."
+  # 파일 전송 후 응답
+  RESPONSE=$(curl -X POST \
+              -F "file=@/Users/Shared/test/wifi_log.txt" \
+              -F "parentDir=/test" \
+              "$SERVER_URL")
+
+  if [ $? -eq 0 ]; then
+    echo "파일 전송: wifi_log.txt"
+    echo "서버 응답: $RESPONSE"
+  else
+    echo "파일 전송 실패: wifi_log.txt"
+  fi
+  
 fi
 
 rm temp_wifi.txt
@@ -357,11 +488,30 @@ for i in "${!apps[@]}"; do
     grep "$app" temp_usagestats.txt | grep "ACTIVITY_RESUMED" > "$log"
     grep "$app" temp_usagestats.txt | grep "ACTIVITY_PAUSED" >> "$log"
     echo "$app 로그가 $log에 저장되었습니다."
+    echo "로그 파일명 및 경로 확인 ${log}"
+    # 파일 전송 후 응답
+    RESPONSE=$(curl -X POST \
+                -F "file=@$log" \
+                -F "parentDir=/test" \
+                "$SERVER_URL")
+
+    if [ $? -eq 0 ]; then
+      echo "파일 전송: ${app}_usage_log.txt"
+      echo "서버 응답: $RESPONSE"
+    else
+      echo "파일 전송 실패: ${app}_log_usage_log.txt"
+    fi
   else
     echo "$app 실행 로그를 찾을 수 없습니다."
   fi
 done
 
 rm temp_usagestats.txt
+
+# 파일 전송 종료 신호 전달
+RESPONSE=$(curl -X POST \
+                 -H "Content-Type: application/json" \
+                 "http://localhost:8080/api/signal?signal='end'")
+echo "파일 시작 종료 응답: $RESPONSE"
 
 echo "작업 완료!"
