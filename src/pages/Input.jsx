@@ -122,7 +122,34 @@ const InputPage = () => {
     }
   };
 
-  const postData = async () => {};
+  const postData = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/result`, // 요청 URL
+        {
+          // 요청 본문 데이터
+          latitude: '37.237555 N',
+          longitude: '127.0710272 E',
+          dateTime: '2024-11-23T22:33:00.012Z',
+        },
+        {
+          // 요청 헤더
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (res.status === 200) {
+        console.log(res.data); // 성공 응답 출력
+      } else {
+        return null; // 데이터가 없는 경우 처리
+      }
+    } catch (err) {
+      console.error('Failed to get location:', err); // 에러 로그 출력
+      return null; // 에러 발생 시 처리
+    }
+  };
 
   // 결과 보기 버튼 클릭
   const handleSubmit = async () => {
@@ -162,7 +189,8 @@ const InputPage = () => {
       window.localStorage.setItem('longitude', formattedLongitude);
       window.localStorage.setItem('latitude', formattedLatitude);
 
-      navigate('/result');
+      postData();
+      // navigate('/result');
     }
   };
 

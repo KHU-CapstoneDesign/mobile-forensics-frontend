@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Card from '../components/result/Card';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const DATA = [
   {
