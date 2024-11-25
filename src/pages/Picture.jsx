@@ -6,6 +6,7 @@ import SampleImg from '../assets/images/sample.png';
 import { useState, useEffect } from 'react';
 import ImageModal from '../components/result/ImageModal';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import Img1 from '../assets/images/1.jpg';
 import Img2 from '../assets/images/2.jpg';
 import Img3 from '../assets/images/3.jpg';
@@ -71,6 +72,35 @@ const Picture = () => {
   useEffect(() => {
     setTime(window.localStorage.getItem('time'));
   }, [window.localStorage.getItem('time')]);
+
+  // 사진 데이터 요청
+  const getData = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/result/image`, // 요청 URL
+        {
+          // 요청 헤더
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // 쿠키 자동 전송
+        },
+      );
+
+      if (res.status === 200) {
+        console.log('response:', res.data); // 성공 응답 출력
+      } else {
+        return null; // 데이터가 없는 경우 처리
+      }
+    } catch (err) {
+      console.error('Failed to get data:', err); // 에러 로그 출력
+      return null; // 에러 발생 시 처리
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>

@@ -16,6 +16,8 @@ const DateTimePick = ({ onSetValue, errorDateTime }) => {
       <DateTimePicker
         label="날짜 및 시간"
         format="YYYY-MM-DD hh:mm:ss"
+        ampm={true} // 24시간 형식 사용
+        views={['year', 'month', 'day', 'hours', 'minutes']} // 초 단위 생략
         onChange={newValue => onSetValue(newValue)}
         sx={{ width: '300px' }}
         slotProps={{

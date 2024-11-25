@@ -1,9 +1,10 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, session } = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 const ProgressBar = require('electron-progressbar');
 const { exec } = require('child_process');
+const axios = require('axios');
 
 let mainWindow = null;
 let progressBar = null;
@@ -15,9 +16,10 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      enableRemoteModule: true,
       devTools: isDev,
       preload: path.join(__dirname, 'preload.js'),
-      webSecurity: false, // CORS 정책 비활성화
+      webSecurity: true, // CORS 정책 비활성화
     },
   });
 
@@ -171,3 +173,66 @@ ipcMain.on('execute-batch', event => {
     event.reply('batch-output', stdout);
   });
 });
+
+ipcMain.on('get-cookie', async () => {
+  session.defaultSession.cookies
+    .get({})
+    .then(cookies => {
+      console.log('All Cookies:', cookies);
+    })
+    .catch(error => {
+      console.error('Error retrieving all cookies:', error);
+    });
+});
+
+ipcMain.on('set-cookie', async event => {
+  console.log('=======triggered======');
+
+  try {
+    const response = await axios.post(
+      'http://localhost:8080/api/result',
+      {
+        latitude: '37.237555 N',
+        longitude: '127.0710272 E',
+        dateTime: '2024-11-04T15:55:00.012Z',
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true, // 쿠키 허용
+      },
+    );
+    if (response.status === 200) {
+      const getCookie = response?.headers['set-cookie'];
+      // console.log('response:', response); // 성공 응답 출력
+      const parsedCookie = await parseCookie(getCookie[0]);
+      console.log(`===============userId: ${parseCookie}====================`); // 쿠키 출력
+
+      await session.defaultSession.cookies
+        .set({
+          url: 'http://localhost:3000', // 쿠키 저장할 주소
+          name: 'userId',
+          value: parsedCookie,
+          // path: '/api/result',
+          httpOnly: false, // client에서 쿠키를 접근 제한
+          expirationDate: Date.now() / 1000 + 3600, // 만료 시간
+        })
+        .then(() => {
+          console.log('쿠키 저장 성공', parsedCookie);
+        })
+        .catch(error => {
+          console.error('쿠키 저장 실패', error);
+        });
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+});
+
+const parseCookie = cookies => {
+  const cookie = cookies.split('; ');
+  const targetCookie = cookie.find(cookie => cookie.startsWith(`userId=`));
+  return targetCookie?.split('=')[1]; // 쿠키 값 추출
+};

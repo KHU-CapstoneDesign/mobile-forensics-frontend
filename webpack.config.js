@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   module: {
     rules: [
@@ -31,6 +33,25 @@ module.exports = {
         // Add your svg loader configuration here
       },
     ],
+  },
+  // Webpack 모드 설정
+  mode: 'development',
+
+  // 엔트리 포인트
+  entry: './src/index.js',
+
+  // 출력 설정
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+  },
+
+  // Node.js 모듈 설정
+  resolve: {
+    fallback: {
+      fs: false, // fs 모듈 비활성화
+      path: require.resolve('path-browserify'), // path 브라우저 대체
+    },
   },
   // resolve: {
   //   alias: {

@@ -5,10 +5,13 @@ import ContentButton from '../components/main/ContentButton';
 import { ReactComponent as PhoneIcon } from '../assets/svgs/phone.svg';
 import { ReactComponent as PCIcon } from '../assets/svgs/pc.svg';
 import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 const Main = () => {
   const navigate = useNavigate();
-
+  useEffect(() => {
+    console.log('쿠키:', document.cookie);
+  }, []);
   // 데이터 추출 여부
   const [isExtracted, setIsExtracted] = useState(false);
 

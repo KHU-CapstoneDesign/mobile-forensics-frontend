@@ -11,6 +11,7 @@ import CameraLog from './pages/CameraLog';
 import GPS from './pages/GPS';
 import Usage from './pages/Usage';
 import UsageDetail from './pages/UsageDetail';
+import { DataProvider } from './contexts/DataContext';
 
 const { ipcRenderer } = window;
 
@@ -44,28 +45,30 @@ const App = () => {
   // };
 
   return (
-    <Root>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Guide />}></Route>
-          <Route path="/main" element={<Main />}></Route>
-          <Route path="/dataExtraction" element={<DataExtraction />}></Route>
-          <Route path="/input" element={<InputPage />}></Route>
-          <Route path="/result" element={<Result />}></Route>
-          <Route path="/result/pictures" element={<Picture />}></Route>
-          <Route path="/result/myboxCache" element={<Picture />}></Route>
-          <Route path="/result/sodaCache" element={<Picture />}></Route>
-          <Route path="/result/cameraLog" element={<CameraLog />}></Route>
-          <Route path="/result/gps" element={<GPS />}></Route>
-          {/* <Route path="/result/cloudUsage" element={<Usage />}></Route> */}
-          <Route path="/result/usage/:appType" element={<Usage />}></Route>
-          <Route
-            path="/result/usage/:appType/:app"
-            element={<UsageDetail />}
-          ></Route>
-        </Routes>
-      </BrowserRouter>
-    </Root>
+    <DataProvider>
+      <Root>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Guide />}></Route>
+            <Route path="/main" element={<Main />}></Route>
+            <Route path="/dataExtraction" element={<DataExtraction />}></Route>
+            <Route path="/input" element={<InputPage />}></Route>
+            <Route path="/result" element={<Result />}></Route>
+            <Route path="/result/pictures" element={<Picture />}></Route>
+            <Route path="/result/myboxCache" element={<Picture />}></Route>
+            <Route path="/result/sodaCache" element={<Picture />}></Route>
+            <Route path="/result/cameraLog" element={<CameraLog />}></Route>
+            <Route path="/result/gps" element={<GPS />}></Route>
+            {/* <Route path="/result/cloudUsage" element={<Usage />}></Route> */}
+            <Route path="/result/usage/:appType" element={<Usage />}></Route>
+            <Route
+              path="/result/usage/:appType/:app"
+              element={<UsageDetail />}
+            ></Route>
+          </Routes>
+        </BrowserRouter>
+      </Root>
+    </DataProvider>
     // <div>
     //   {/* <div style={style}>
     //     <p>This is first electron desktop app.</p>

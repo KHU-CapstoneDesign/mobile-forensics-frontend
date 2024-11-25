@@ -31,6 +31,8 @@ const slides = [
 ];
 
 const Guide = () => {
+  const { ipcRenderer } = window;
+
   const navigate = useNavigate();
 
   const [step, setStep] = useState(0);
@@ -46,10 +48,13 @@ const Guide = () => {
   const handleDotClick = index => {
     setStep(index);
   };
+  const [cookieSet, setCookieSet] = useState(false);
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    // 페이지 이동
     navigate('/main');
   };
+
   return (
     <Root>
       {/* <Slider /> */}

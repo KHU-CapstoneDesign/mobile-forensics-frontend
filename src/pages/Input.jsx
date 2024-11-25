@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Layout from '../components/layout/Layout';
 import DaumPostCode from 'react-daum-postcode';
 import Button from '../components/common/Button';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import DateTimePick from '../components/input/DateTimePicker';
 import { TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { DataContext } from '../contexts/DataContext';
 
 const theme = createTheme({
   palette: {
@@ -22,6 +23,7 @@ const theme = createTheme({
 
 const InputPage = () => {
   const navigate = useNavigate();
+  const { setData } = useContext(DataContext);
 
   const [zonecode, setZonecode] = useState(null); // 우편번호
   const [address, setAddress] = useState(null); // 주소
@@ -32,6 +34,12 @@ const InputPage = () => {
   const [errorAddress, setErrorAddress] = useState(false); // 주소 validation 체크
   const [errorDateTime, setErrorDateTime] = useState(false); // 날짜 및 시간 validation 체크
   const [isSubmit, setIsSubmit] = useState(false); // 결과 보기 버튼 클릭 여부
+  // post 요청보낼 데이터
+  const [formattedData, setFormattedData] = useState({
+    latitude: '',
+    longitude: '',
+    dateTime: '',
+  });
 
   // 날짜 및 시간 값
   const handleDateTimeChange = newValue => {
@@ -123,33 +131,51 @@ const InputPage = () => {
   };
 
   const postData = async () => {
+    const data = {
+      latitude: `${formattedData?.latitude}`,
+      longitude: `${formattedData?.longitude}`,
+      dateTime: `${formattedData?.dateTime}`,
+    };
+
+    console.log('post data', data);
+
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/result`, // 요청 URL
-        {
-          // 요청 본문 데이터
-          latitude: '37.237555 N',
-          longitude: '127.0710272 E',
-          dateTime: '2024-11-23T22:33:00.012Z',
-        },
+        data,
         {
           // 요청 헤더
           headers: {
             'Content-Type': 'application/json',
           },
+          withCredentials: true, // 쿠키 허용
         },
       );
 
       if (res.status === 200) {
-        console.log(res.data); // 성공 응답 출력
+        console.log('response:', res.data); // 성공 응답 출력
+        setData(res.data);
+        navigate('/result');
       } else {
         return null; // 데이터가 없는 경우 처리
       }
     } catch (err) {
-      console.error('Failed to get location:', err); // 에러 로그 출력
+      console.error('Failed to post data:', err); // 에러 로그 출력
       return null; // 에러 발생 시 처리
     }
   };
+
+  // formattedData 변경 시 postData 호출
+  useEffect(() => {
+    if (
+      isSubmit &&
+      formattedData.latitude &&
+      formattedData.longitude &&
+      formattedData.dateTime
+    ) {
+      postData();
+    }
+  }, [formattedData, isSubmit]);
 
   // 결과 보기 버튼 클릭
   const handleSubmit = async () => {
@@ -179,18 +205,18 @@ const InputPage = () => {
       const latitude = parseFloat(data.latitude);
       const formattedLongitude = longitude.toFixed(6);
       const formattedLatitude = latitude.toFixed(6);
-      console.log(
-        `post data: ${data.longitude}, ${data.latitude}\n${formattedDateTime}`,
-      );
+
+      setFormattedData({
+        latitude: `${formattedLatitude} N`,
+        longitude: `${formattedLongitude} E`,
+        dateTime: `${formattedDate}T${formattedTime}.000Z`,
+      });
 
       // 로컬 스토리지에 input값들 저장
       window.localStorage.setItem('date', formattedDate);
       window.localStorage.setItem('time', formattedTime);
       window.localStorage.setItem('longitude', formattedLongitude);
       window.localStorage.setItem('latitude', formattedLatitude);
-
-      postData();
-      // navigate('/result');
     }
   };
 
