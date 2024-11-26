@@ -7,45 +7,7 @@ import { useState, useEffect } from 'react';
 import ImageModal from '../components/result/ImageModal';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Img1 from '../assets/images/1.jpg';
-import Img2 from '../assets/images/2.jpg';
-import Img3 from '../assets/images/3.jpg';
-import Img4 from '../assets/images/4.jpg';
-import Img5 from '../assets/images/5.jpg';
-import Img6 from '../assets/images/6.jpg';
-
-const DATA = [
-  {
-    id: 1,
-    picture: Img1,
-    title: '사진1',
-    time: '12:43:30',
-    result: false,
-  },
-  { id: 2, picture: Img2, title: '사진2', time: '13:05:30', result: true },
-  { id: 3, picture: Img3, title: '사진3', time: '13:16:30', result: true },
-  {
-    id: 4,
-    picture: Img4,
-    title: '사진4',
-    time: '13:17:30',
-    result: false,
-  },
-  {
-    id: 5,
-    picture: Img5,
-    title: '사진5',
-    time: '13:18:30',
-    result: false,
-  },
-  {
-    id: 6,
-    picture: Img6,
-    title: '사진6',
-    time: '13:23:30',
-    result: false,
-  },
-];
+import LoadingIndicator from '../components/common/LoadingIndicator';
 
 const Picture = () => {
   const [time, setTime] = useState('');
@@ -56,6 +18,8 @@ const Picture = () => {
   });
   const [isOpen, setIsOpen] = useState(false); // 모달
   const [imageData, setImageData] = useState([]);
+  const [unsafeCnt, setUnsafeCnt] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleClick = (id, title, picture, result) => {
     setSelectedImg({ id: id, title: title, picture: picture });
@@ -76,6 +40,7 @@ const Picture = () => {
 
   // 사진 데이터 요청
   const getData = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/result/image`, // 요청 URL
@@ -104,6 +69,9 @@ const Picture = () => {
             item.result.adult !== 'VERY_UNLIKELY' ||
             item.result.racy !== 'VERY_UNLIKELY';
 
+          if (result) {
+            setUnsafeCnt(prev => (prev += 1));
+          }
           // Blob URL 생성
           return {
             ...item,
@@ -113,6 +81,7 @@ const Picture = () => {
         });
 
         setImageData(imageList);
+        setLoading(false);
       } else {
         return null; // 데이터가 없는 경우 처리
       }
@@ -156,8 +125,10 @@ const Picture = () => {
         />
       )}
       <Layout>
+        {loading && <LoadingIndicator />}
+
         <Wrapper>
-          <Detail time={time} number={1}></Detail>
+          <Detail time={time} number={unsafeCnt}></Detail>
           <CardSection>
             {imageData.map(item => {
               console.log(item);
