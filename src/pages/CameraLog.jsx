@@ -4,6 +4,7 @@ import Detail from '../components/result/Detail';
 import { useState, useEffect } from 'react';
 import LogContainer from '../components/result/LogContainer';
 import LogItem from '../components/result/LogItem';
+import axios from 'axios';
 
 const DATA = [
   { time: '04:19:11', result: false },
@@ -15,23 +16,64 @@ const DATA = [
 
 const CameraLog = () => {
   const [time, setTime] = useState('');
+  const [logData, setLogData] = useState([]);
 
   useEffect(() => {
     setTime(window.localStorage.getItem('time'));
   }, [window.localStorage.getItem('time')]);
+
+  // 촬영 로그 데이터 요청
+  const getData = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/result/picture-taken`, // 요청 URL
+        {
+          // 요청 헤더
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // 쿠키 자동 전송
+        },
+      );
+
+      if (res.status === 200) {
+        console.log('response:', res.data); // 성공 응답 출력
+        const formattedTime = res.data.map(
+          item => item.timestamp.split(['T'])[1],
+        );
+        setLogData(formattedTime);
+      } else {
+        return null; // 데이터가 없는 경우 처리s
+      }
+    } catch (err) {
+      console.error('Failed to get data:', err); // 에러 로그 출력
+      return null; // 에러 발생 시 처리
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (logData.length) {
+      console.log(logData);
+    }
+  }, [logData]);
+
   return (
     <Layout>
       <Wrapper>
-        <Detail time={time} number={2} />
+        <Detail time={time} number={logData.length} />
         <Content>
           <LogWrapper>
-            {DATA.map((item, idx) => (
+            {logData.map((item, idx) => (
               <LogItem
                 key={idx}
-                $result={item.result}
-                $isLast={DATA.length - 1 === idx}
+                $result={item}
+                $isLast={logData.length - 1 === idx}
               >
-                {item.time}
+                {item}
               </LogItem>
             ))}
           </LogWrapper>

@@ -7,7 +7,8 @@ import BarChart from '../components/result/BarChart';
 import DoughnutChart from '../components/result/DoughnutChart';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import LogItem from '../components/result/LogItem';
+import axios from 'axios';
 const theme = createTheme({
   palette: {
     primary: {
@@ -29,6 +30,7 @@ const UsageDetail = () => {
   const selectRef = useRef();
   const [time, setTime] = useState('');
   const [chart, setChart] = useState(1);
+  const [logData, setLogData] = useState([]);
 
   useEffect(() => {
     setTime(window.localStorage.getItem('time'));
@@ -59,12 +61,53 @@ const UsageDetail = () => {
     }
   };
 
+  const getSodaData = async () => {
+    // soda
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/result/app-cam/soda`, // 요청 URL
+        {
+          // 요청 헤더
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // 쿠키 자동 전송
+        },
+      );
+
+      if (res.status === 200) {
+        console.log('soda response:', res.data); // 성공 응답 출력
+        if (res.data.length) {
+          setLogData(prev => [...prev, 'soda']);
+        }
+      } else {
+        return null; // 데이터가 없는 경우 처리
+      }
+    } catch (err) {
+      console.error('Failed to get data:', err); // 에러 로그 출력
+      return null; // 에러 발생 시 처리
+    }
+  };
+  useEffect(() => {
+    setLogData();
+  }, []);
   return (
     <Layout>
       <Wrapper>
         <Wrap>
           <Detail time={time} number={3} />
-          <ChartSection>
+          <LogWrapper>
+            {logData.map((item, idx) => (
+              <LogItem
+                key={idx}
+                $result={item}
+                $isLast={logData.length - 1 === idx}
+              >
+                {item}
+              </LogItem>
+            ))}
+          </LogWrapper>
+          {/* <ChartSection>
             <ThemeProvider theme={theme}>
               <FormControl
                 id="here"
@@ -89,7 +132,7 @@ const UsageDetail = () => {
             ) : (
               <BarChart ChartData={barData} width={800} height={500} />
             )}
-          </ChartSection>
+          </ChartSection> */}
         </Wrap>
       </Wrapper>
     </Layout>
@@ -118,4 +161,9 @@ const ChartSection = styled.div`
   background-color: #f5f5f5;
   padding: 30px 50px;
   border-radius: 8px;
+`;
+
+const LogWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
