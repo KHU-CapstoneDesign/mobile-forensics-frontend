@@ -35,7 +35,7 @@ const Image = styled.img`
 
 const Title = styled.div`
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
 `;
 

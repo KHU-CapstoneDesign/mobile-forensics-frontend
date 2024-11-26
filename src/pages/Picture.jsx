@@ -55,6 +55,7 @@ const Picture = () => {
     picture: null,
   });
   const [isOpen, setIsOpen] = useState(false); // 모달
+  const [imageData, setImageData] = useState([]);
 
   const handleClick = (id, title, picture, result) => {
     setSelectedImg({ id: id, title: title, picture: picture });
@@ -89,6 +90,23 @@ const Picture = () => {
 
       if (res.status === 200) {
         console.log('response:', res.data); // 성공 응답 출력
+        const imageList = res.data.map(item => {
+          // Base64를 Blob URL로 변환
+          const byteCharacters = atob(item.imageData);
+          const byteNumbers = Array.from(byteCharacters).map(char =>
+            char.charCodeAt(0),
+          );
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'image/jpeg' });
+
+          // Blob URL 생성
+          return {
+            ...item,
+            imageUrl: URL.createObjectURL(blob),
+          };
+        });
+
+        setImageData(imageList);
       } else {
         return null; // 데이터가 없는 경우 처리
       }
@@ -101,6 +119,12 @@ const Picture = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    if (imageData.length) {
+      console.log(imageData);
+    }
+  }, [imageData]);
 
   return (
     <>
@@ -115,16 +139,19 @@ const Picture = () => {
         <Wrapper>
           <Detail time={time} number={1}></Detail>
           <CardSection>
-            {DATA.map(item => (
-              <PictureCard
-                key={item.id}
-                picture={item.picture}
-                title={item.title}
-                time={item.time}
-                result={item.result}
-                onClick={() => handleClick(item.id, item.title, item.picture)}
-              />
-            ))}
+            {imageData.map(item => {
+              console.log(item);
+              return (
+                <PictureCard
+                  key={item.fileName}
+                  picture={item.imageUrl}
+                  title={item.fileName}
+                  time={'as'}
+                  result={item.result}
+                  onClick={() => handleClick(item.id, item.title, item.picture)}
+                />
+              );
+            })}
           </CardSection>
         </Wrapper>
       </Layout>
