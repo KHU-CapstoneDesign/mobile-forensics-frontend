@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Layout from '../components/layout/Layout';
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import Detail from '../components/result/Detail';
 import BarChart from '../components/result/BarChart';
 import DoughnutChart from '../components/result/DoughnutChart';
@@ -26,7 +26,6 @@ const selectFieldStyles = {
 
 const UsageDetail = () => {
   const params = useParams();
-  const app = params.app;
   const selectRef = useRef();
   const [time, setTime] = useState('');
   const [chart, setChart] = useState(1);
@@ -61,24 +60,26 @@ const UsageDetail = () => {
     }
   };
 
-  const getSodaData = async () => {
-    // soda
+  const getData = async app => {
+    console.log(app);
+    const url = `${process.env.REACT_APP_API_URL}/api/result/${app === 'MYBOX' ? 'app-cloud/naver' : app === 'DRIVE' ? 'app-cloud/google' : app === 'SODA' ? 'app-cam/soda' : 'app-cam/snow'}`;
+    console.log(url);
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/result/app-cam/soda`, // 요청 URL
-        {
-          // 요청 헤더
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true, // 쿠키 자동 전송
+      const res = await axios.get(url, {
+        // 요청 헤더
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        withCredentials: true, // 쿠키 자동 전송
+      });
 
       if (res.status === 200) {
-        console.log('soda response:', res.data); // 성공 응답 출력
+        console.log('response:', res.data); // 성공 응답 출력
         if (res.data.length) {
-          setLogData(prev => [...prev, 'soda']);
+          const formattedTime = res.data.map(
+            item => item.timestamp.split(['T'])[1],
+          );
+          setLogData(formattedTime);
         }
       } else {
         return null; // 데이터가 없는 경우 처리
@@ -89,19 +90,24 @@ const UsageDetail = () => {
     }
   };
   useEffect(() => {
-    setLogData();
-  }, []);
+    if (params?.app) {
+      console.log(params)?.app;
+      getData(params?.app);
+    }
+  }, [params]);
+
   return (
     <Layout>
       <Wrapper>
         <Wrap>
-          <Detail time={time} number={3} />
+          <Detail time={time} number={logData.length} />
           <LogWrapper>
             {logData.map((item, idx) => (
               <LogItem
                 key={idx}
                 $result={item}
                 $isLast={logData.length - 1 === idx}
+                text={'실행'}
               >
                 {item}
               </LogItem>
@@ -166,4 +172,5 @@ const ChartSection = styled.div`
 const LogWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  padding-bottom: 20px;
 `;

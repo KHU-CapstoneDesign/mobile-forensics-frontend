@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-const LogItem = ({ $result, $isLast, children }) => {
+const LogItem = ({ $result, $isLast, text = '촬영', children }) => {
   return (
     <Wrapper $result={$result} $isLast={$isLast}>
       <Icon>
         <Circle $result={$result} />
-        {`${children} 촬영`}
+        {`${children} ${text}`}
       </Icon>
       {$isLast ? '' : <Bar />}
     </Wrapper>
