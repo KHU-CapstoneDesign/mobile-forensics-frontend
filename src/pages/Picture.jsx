@@ -131,7 +131,7 @@ const Picture = () => {
           <Detail time={time} number={unsafeCnt}></Detail>
           <CardSection>
             {imageData.map(item => {
-              console.log(item);
+              // console.log(item);
               return (
                 <PictureCard
                   key={item.fileName}

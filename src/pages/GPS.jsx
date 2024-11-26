@@ -6,11 +6,15 @@ import { useState, useEffect } from 'react';
 import MarkerImg from '../assets/images/marker.png';
 import WarningMarkerImg from '../assets/images/markerWarning.png';
 import Detail from '../components/result/Detail';
+import LoadingIndicator from '../components/common/LoadingIndicator';
+import axios from 'axios';
 
 const GPS = () => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [time, setTime] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [locationData, setLocationData] = useState([]);
 
   useEffect(() => {
     setTime(window.localStorage.getItem('time'));
@@ -55,13 +59,48 @@ const GPS = () => {
     },
   ];
 
+  // 위치 데이터 요청
+  const getData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/result/location`, // 요청 URL
+        {
+          // 요청 헤더
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // 쿠키 자동 전송
+        },
+      );
+
+      if (res.status === 200) {
+        console.log('response:', res.data); // 성공 응답 출력
+
+        setLocationData(res.data);
+        setLoading(false);
+      } else {
+        return null; // 데이터가 없는 경우 처리
+      }
+    } catch (err) {
+      console.error('Failed to get data:', err); // 에러 로그 출력
+      return null; // 에러 발생 시 처리
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <Layout>
+      {loading && <LoadingIndicator />}
+
       <Wrapper id="wrapper">
         <div style={{ marginTop: '50px' }}>
           <Detail
             time={time}
-            number={DATA.length}
+            number={locationData.length}
             latitude={latitude}
             longtitude={longitude}
           />
@@ -133,12 +172,12 @@ const GPS = () => {
               </div>
             </CustomOverlayMap>
           )}
-          {DATA?.map((position, index) => {
-            console.log(position.title, position.latlng);
+          {locationData?.map((item, index) => {
+            console.log(item);
             return (
               <MapMarker
-                key={`${position.title}-${position.latlng}`}
-                position={position?.latlng} // 마커를 표시할 위치
+                key={index}
+                position={{ lat: item.latitude, lng: item.longitude }} // 마커를 표시할 위치
                 image={{
                   src: WarningMarkerImg, // 마커이미지의 주소입니다
                   size: {
@@ -146,7 +185,7 @@ const GPS = () => {
                     height: 40,
                   }, // 마커이미지의 크기입니다
                 }}
-                title={position.title} // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                title={index} // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
               />
             );
           })}
