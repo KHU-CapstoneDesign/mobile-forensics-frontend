@@ -67,6 +67,7 @@ const Result = () => {
     // console.log('쿠키:', cookies);
     if (data) {
       console.log('결과 데이터:', data);
+      ipcRenderer.send('get-cookie');
 
       // 범죄 가능성
       let sum = 0;

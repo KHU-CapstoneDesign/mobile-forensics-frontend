@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Modal from '../components/dataExtraction/Modal';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const DataExtraction = () => {
   const { ipcRenderer } = window;
@@ -14,11 +15,13 @@ const DataExtraction = () => {
   const [progress, setProgress] = useState(0);
 
   const openModal = () => {
-    setProgress(0);
-    setIsModalOpen(true);
-    startTimer();
-    localStorage.setItem('isExtracted', JSON.stringify(true));
-    ipcRenderer.send('execute-batch');
+    deleteData(); // 이전 기록 있으면 삭제
+    ipcRenderer.send('get-cookie');
+    // setProgress(0);
+    // setIsModalOpen(true);
+    // startTimer();
+    // localStorage.setItem('isExtracted', JSON.stringify(true));
+    // ipcRenderer.send('execute-batch');
   };
 
   const closeModal = () => {
@@ -40,6 +43,53 @@ const DataExtraction = () => {
       });
     }, 100);
   };
+
+  // 이전 기록 삭제
+  const deleteData = async () => {
+    try {
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/exit`,
+        {
+          // 요청 본문 데이터
+          data: {}, // 필요 시 삭제 요청에 데이터를 포함
+          // 요청 옵션
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // 쿠키 자동 전송
+        },
+      );
+
+      if (res.status === 203) {
+        console.log('response:', res.data); // 성공 응답 출력
+        console.log('삭제 성공');
+      } else {
+        console.warn('Unexpected status code:', res.status);
+      }
+    } catch (err) {
+      console.error('Failed to delete data:', err); // 에러 로그 출력
+    }
+  };
+
+  // const [events, setEvents] = useState([]);
+
+  // useEffect(() => {
+  //   // SSE 연결 설정
+  //   const eventSource = new EventSource('http://localhost:8080/api/signal');
+
+  //   eventSource.addEventListener('new_thread', () => {
+  //     //'new_thread' 이벤트가 오면 할 동작
+  //   });
+
+  //   eventSource.onerror = () => {
+  //     //에러 발생시 할 동작
+  //     eventSource.close(); //연결 끊기
+  //   };
+
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, []);
 
   return (
     <>
