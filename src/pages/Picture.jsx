@@ -116,6 +116,20 @@ const Picture = () => {
     }
   };
 
+  const formatTimestamp = timestamp => {
+    // 뒤 3개의 값만 가져오기
+    const [hours, minutes, seconds] = timestamp.slice(-3);
+
+    // 한 자릿수 시간, 분, 초를 두 자릿수로 포맷
+    const formattedTime = [
+      String(hours).padStart(2, '0'),
+      String(minutes).padStart(2, '0'),
+      String(seconds).padStart(2, '0'),
+    ].join(':');
+
+    return formattedTime;
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -146,7 +160,7 @@ const Picture = () => {
                   key={item.fileName}
                   picture={item.imageUrl}
                   title={item.fileName}
-                  time={'as'}
+                  time={formatTimestamp(item.timestamp)}
                   result={item.result}
                   onClick={() => handleClick(item.id, item.title, item.picture)}
                 />
