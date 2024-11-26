@@ -55,7 +55,7 @@ const GPS = () => {
         setLocationData(res.data);
         setLocationData(prev => [
           ...prev,
-          { latitude: '37.239800', longtitude: '127.081198' },
+          { latitude: '37.24080', longtitude: '127.079500' },
         ]);
         setLoading(false);
       } else {
@@ -96,14 +96,14 @@ const GPS = () => {
             width: '70%',
             height: '70%',
           }}
-          level={1} // 지도의 확대 레벨
+          level={3} // 지도의 확대 레벨
         >
           <Circle
             center={{
               lat: latitude,
               lng: longitude,
             }}
-            radius={50}
+            radius={200}
             strokeWeight={2} // 선의 두께입니다
             strokeColor={'#75B8FA'} // 선의 색깔입니다
             strokeOpacity={2} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
@@ -156,7 +156,7 @@ const GPS = () => {
             return (
               <MapMarker
                 key={index}
-                position={{ lat: '37.239850', lng: '127.081148' }} // 마커를 표시할 위치
+                position={{ lat: '37.24080', lng: '127.079500' }} // 마커를 표시할 위치
                 image={{
                   src: WarningMarkerImg, // 마커이미지의 주소입니다
                   size: {

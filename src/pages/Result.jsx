@@ -84,7 +84,7 @@ const Result = () => {
         // setFormatData(prev => [...prev, 'gps']);
       }
       if (data.cache.soda || data.cache.mybox) {
-        sum += 0.5;
+        sum += 0.8;
         if (data.cache.soda) {
           setFormatData(prev => [...prev, 'cacheSoda']);
         }

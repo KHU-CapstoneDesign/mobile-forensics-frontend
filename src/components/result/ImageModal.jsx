@@ -20,10 +20,10 @@ const ImageModal = ({ picture, title, onClose }) => {
 
   return (
     <Overlay>
+      <IconWrap onClick={onClose}>
+        <CloseIcon width={50} height={50} fill={'#ffffff'} />
+      </IconWrap>
       <Wrapper ref={modalRef}>
-        <IconWrap onClick={onClose}>
-          <CloseIcon width={30} height={30} fill={'#2c2c2c'} />
-        </IconWrap>
         <Image src={picture} alt={title} />
       </Wrapper>
     </Overlay>
@@ -51,8 +51,8 @@ const Wrapper = styled.div`
 
 const IconWrap = styled.div`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 80px;
+  right: 30px;
   width: 60px;
   height: 60px;
   cursor: pointer;

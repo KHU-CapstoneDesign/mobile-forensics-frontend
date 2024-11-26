@@ -41,7 +41,7 @@ const DataExtraction = () => {
         }
         return prevProgress + 1;
       });
-    }, 100);
+    }, 200);
   };
 
   // 이전 기록 삭제

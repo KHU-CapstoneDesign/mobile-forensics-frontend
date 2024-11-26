@@ -68,8 +68,10 @@ const Picture = () => {
 
           // adult 또는 racy가 VERY_UNLIKELY가 아닌 경우 result를 true로 설정
           const result =
-            item.result.adult !== 'VERY_UNLIKELY' ||
-            item.result.racy !== 'VERY_UNLIKELY';
+            (item.result.adult !== 'VERY_UNLIKELY' &&
+              item.result.adult !== 'UNLIKELY') ||
+            (item.result.racy !== 'VERY_UNLIKELY' &&
+              item.result.racy !== 'UNLIKELY');
 
           if (result) {
             setUnsafeCnt(prev => (prev += 1));
