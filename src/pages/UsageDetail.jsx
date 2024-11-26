@@ -32,8 +32,8 @@ const UsageDetail = () => {
   const [logData, setLogData] = useState([]);
 
   useEffect(() => {
-    setTime(window.localStorage.getItem('time'));
-  }, [window.localStorage.getItem('time')]);
+    setTime(window.sessionStorage.getItem('time'));
+  }, [window.sessionStorage.getItem('time')]);
 
   // 범행 시간대 데이터(60분)
   const doughnutData = Array.from({ length: 60 }, (_, index) => ({

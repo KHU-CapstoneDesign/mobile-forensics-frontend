@@ -213,10 +213,10 @@ const InputPage = () => {
       });
 
       // 로컬 스토리지에 input값들 저장
-      window.localStorage.setItem('date', formattedDate);
-      window.localStorage.setItem('time', formattedTime);
-      window.localStorage.setItem('longitude', formattedLongitude);
-      window.localStorage.setItem('latitude', formattedLatitude);
+      window.sessionStorage.setItem('date', formattedDate);
+      window.sessionStorage.setItem('time', formattedTime);
+      window.sessionStorage.setItem('longitude', formattedLongitude);
+      window.sessionStorage.setItem('latitude', formattedLatitude);
     }
   };
 

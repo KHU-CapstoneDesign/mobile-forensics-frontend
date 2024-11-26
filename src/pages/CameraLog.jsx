@@ -19,8 +19,8 @@ const CameraLog = () => {
   const [logData, setLogData] = useState([]);
 
   useEffect(() => {
-    setTime(window.localStorage.getItem('time'));
-  }, [window.localStorage.getItem('time')]);
+    setTime(window.sessionStorage.getItem('time'));
+  }, [window.sessionStorage.getItem('time')]);
 
   // 촬영 로그 데이터 요청
   const getData = async () => {

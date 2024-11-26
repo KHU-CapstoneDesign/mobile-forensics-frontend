@@ -5,11 +5,13 @@ import PictureCard from '../components/result/PictureCard';
 import SampleImg from '../assets/images/sample.png';
 import { useState, useEffect } from 'react';
 import ImageModal from '../components/result/ImageModal';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import LoadingIndicator from '../components/common/LoadingIndicator';
-
 const Picture = () => {
+  const params = useParams();
+  const location = useLocation();
+
   const [time, setTime] = useState('');
   const [selectedImg, setSelectedImg] = useState({
     id: '',
@@ -35,15 +37,15 @@ const Picture = () => {
   };
 
   useEffect(() => {
-    setTime(window.localStorage.getItem('time'));
-  }, [window.localStorage.getItem('time')]);
+    setTime(window.sessionStorage.getItem('time'));
+  }, [window.sessionStorage.getItem('time')]);
 
   // 사진 데이터 요청
-  const getData = async () => {
+  const getData = async text => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/result/image`, // 요청 URL
+        `${process.env.REACT_APP_API_URL}/api/result/${text}`, // 요청 URL
         {
           // 요청 헤더
           headers: {
@@ -106,8 +108,14 @@ const Picture = () => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (location.pathname.includes('/pictures')) {
+      getData('image');
+    } else if (location.pathname.includes('/sodaCache')) {
+      getData('cache-image');
+    } else if (location.pathname.includes('/myboxCache')) {
+      getData('cloud');
+    }
+  }, [location]);
 
   useEffect(() => {
     if (imageData.length) {

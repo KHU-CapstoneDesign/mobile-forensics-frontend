@@ -44,7 +44,7 @@ const Layout = ({ children }) => {
         }
         setType('카메라 앱 사용 기록');
       }
-      setDate(window.localStorage.getItem('date'));
+      setDate(window.sessionStorage.getItem('date'));
       setTitle('포렌식 결과');
     }
   }, [location]);

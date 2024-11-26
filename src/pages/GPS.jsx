@@ -17,47 +17,22 @@ const GPS = () => {
   const [locationData, setLocationData] = useState([]);
 
   useEffect(() => {
-    setTime(window.localStorage.getItem('time'));
-  }, [window.localStorage.getItem('time')]);
+    setTime(window.sessionStorage.getItem('time'));
+  }, [window.sessionStorage.getItem('time')]);
 
   useEffect(() => {
-    setLatitude(window.localStorage.getItem('latitude'));
-    setLongitude(window.localStorage.getItem('longitude'));
-  }, [window.localStorage.getItem('latitude')]);
+    setLatitude(window.sessionStorage.getItem('latitude'));
+    setLongitude(window.sessionStorage.getItem('longitude'));
+  }, [window.sessionStorage.getItem('latitude')]);
 
   // useKakaoLoader();
   const [isHovered, setIsHovered] = useState(false);
 
-  const DATA = [
-    {
-      title: '장소1',
-      latlng: {
-        lat: latitude,
-        lng: longitude - 0.00009,
-      },
-    },
-    {
-      title: '장소2',
-      latlng: {
-        lat: window.localStorage.getItem('latitude') - 0.00009,
-        lng: window.localStorage.getItem('longitude'),
-      },
-    },
-    {
-      title: '장소3',
-      latlng: {
-        lat: window.localStorage.getItem('latitude'),
-        lng: window.localStorage.getItem('longitude') - 0.00005,
-      },
-    },
-    {
-      title: '장소4',
-      latlng: {
-        lat: window.localStorage.getItem('latitude') - 0.00009,
-        lng: window.localStorage.getItem('longitude') - 0.00009,
-      },
-    },
-  ];
+  useEffect(() => {
+    if (locationData.length) {
+      console.log(locationData);
+    }
+  }, [locationData]);
 
   // 위치 데이터 요청
   const getData = async () => {
@@ -78,6 +53,10 @@ const GPS = () => {
         console.log('response:', res.data); // 성공 응답 출력
 
         setLocationData(res.data);
+        setLocationData(prev => [
+          ...prev,
+          { latitude: '37.239800', longtitude: '127.081198' },
+        ]);
         setLoading(false);
       } else {
         return null; // 데이터가 없는 경우 처리
@@ -177,7 +156,7 @@ const GPS = () => {
             return (
               <MapMarker
                 key={index}
-                position={{ lat: item.latitude, lng: item.longitude }} // 마커를 표시할 위치
+                position={{ lat: '37.239850', lng: '127.081148' }} // 마커를 표시할 위치
                 image={{
                   src: WarningMarkerImg, // 마커이미지의 주소입니다
                   size: {

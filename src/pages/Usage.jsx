@@ -17,8 +17,8 @@ const Usage = () => {
   const [cameraData, setCameraData] = useState([]);
 
   useEffect(() => {
-    setTime(window.localStorage.getItem('time'));
-  }, [window.localStorage.getItem('time')]);
+    setTime(window.sessionStorage.getItem('time'));
+  }, [window.sessionStorage.getItem('time')]);
 
   // 클라우드 앱 사용 기록 데이터 요청
   const getCloudData = async () => {

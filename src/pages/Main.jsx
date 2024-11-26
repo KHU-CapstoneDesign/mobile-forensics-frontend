@@ -17,10 +17,10 @@ const Main = () => {
 
   // 로컬 저장소에 데이터 추출 여부 저장
   useEffect(() => {
-    if (localStorage.getItem('isExtracted')) {
-      setIsExtracted(localStorage.getItem('isExtracted'));
+    if (sessionStorage.getItem('isExtracted')) {
+      setIsExtracted(sessionStorage.getItem('isExtracted'));
     } else {
-      localStorage.setItem('isExtracted', JSON.stringify(isExtracted));
+      sessionStorage.setItem('isExtracted', JSON.stringify(isExtracted));
       setIsExtracted(false);
     }
   }, []);

@@ -19,7 +19,7 @@ const DataExtraction = () => {
     setProgress(0);
     setIsModalOpen(true);
     startTimer();
-    localStorage.setItem('isExtracted', JSON.stringify(true));
+    sessionStorage.setItem('isExtracted', JSON.stringify(true));
     ipcRenderer.send('execute-batch');
     deleteData(); // 이전 기록 있으면 삭제
   };
