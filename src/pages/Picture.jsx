@@ -99,10 +99,16 @@ const Picture = () => {
           const byteArray = new Uint8Array(byteNumbers);
           const blob = new Blob([byteArray], { type: 'image/jpeg' });
 
+          // adult 또는 racy가 VERY_UNLIKELY가 아닌 경우 result를 true로 설정
+          const result =
+            item.result.adult !== 'VERY_UNLIKELY' ||
+            item.result.racy !== 'VERY_UNLIKELY';
+
           // Blob URL 생성
           return {
             ...item,
             imageUrl: URL.createObjectURL(blob),
+            result,
           };
         });
 
@@ -162,7 +168,9 @@ const Picture = () => {
                   title={item.fileName}
                   time={formatTimestamp(item.timestamp)}
                   result={item.result}
-                  onClick={() => handleClick(item.id, item.title, item.picture)}
+                  onClick={() =>
+                    handleClick(item.fileName, item.title, item.imageUrl)
+                  }
                 />
               );
             })}
