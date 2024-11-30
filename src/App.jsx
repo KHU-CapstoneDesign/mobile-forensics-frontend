@@ -12,6 +12,7 @@ import GPS from './pages/GPS';
 import Usage from './pages/Usage';
 import UsageDetail from './pages/UsageDetail';
 import { DataProvider } from './contexts/DataContext';
+import axios from 'axios';
 
 const { ipcRenderer } = window;
 
@@ -19,6 +20,7 @@ const App = () => {
   const [version, setVersion] = useState('');
   const [files, setFiles] = useState([]);
 
+  // 앱 버전 확인
   useEffect(() => {
     ipcRenderer.send('app_version');
 
@@ -26,23 +28,44 @@ const App = () => {
       setVersion(args.version);
     });
 
-    ipcRenderer.on('files', (event, args) => {
-      setFiles(args.files);
-    });
+    // ipcRenderer.on('files', (event, args) => {
+    //   setFiles(args.files);
+    // });
   }, []);
 
-  // const [output, setOutput] = useState('');
+  // 창 닫힘 시 데이터 삭제
+  useEffect(() => {
+    ipcRenderer.on('window-closing', event => {
+      deleteData();
+    });
+  });
 
-  // useEffect(() => {
-  //     window.batchPreload.onBatchOutput((data) => {
-  //         setOutput((prev) => prev + data + '\n');
-  //     });
-  // }, []);
+  // 이전 기록 삭제
+  const deleteData = async () => {
+    try {
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/exit`,
+        {
+          // 요청 본문 데이터
+          data: {}, // 필요 시 삭제 요청에 데이터를 포함
+          // 요청 옵션
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // 쿠키 자동 전송
+        },
+      );
 
-  // const runBatch = () => {
-  //     setOutput(''); // 이전 출력 내용 초기화
-  //     window.batchPreload.executeBatch();
-  // };
+      if (res.status === 203) {
+        console.log('response:', res.data); // 성공 응답 출력
+        console.log('삭제 성공');
+      } else {
+        console.warn('Unexpected status code:', res.status);
+      }
+    } catch (err) {
+      console.error('Failed to delete data:', err); // 에러 로그 출력
+    }
+  };
 
   return (
     <DataProvider>

@@ -30,13 +30,20 @@ const createWindow = () => {
   );
 
   if (isDev) {
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    mainWindow.webContents.openDevTools({ mode: 'right' });
   }
 
   // mainWindow.setResizable(false);
   mainWindow.setResizable(true);
   mainWindow.on('closed', () => (mainWindow = null));
   mainWindow.focus();
+
+  // 창 닫힘
+  mainWindow.on('close', async event => {
+    event.preventDefault();
+    // 이전 기록 삭제
+    mainWindow.webContents.send('window-closing'); // 렌더러 프로세스에 이벤트 전달
+  });
 };
 
 ipcMain.on('app_version', event => {
@@ -174,6 +181,7 @@ ipcMain.on('execute-batch', event => {
   });
 });
 
+// 쿠키 확인
 ipcMain.on('get-cookie', async () => {
   session.defaultSession.cookies
     .get({})
@@ -184,55 +192,3 @@ ipcMain.on('get-cookie', async () => {
       console.error('Error retrieving all cookies:', error);
     });
 });
-
-ipcMain.on('set-cookie', async event => {
-  console.log('=======triggered======');
-
-  try {
-    const response = await axios.post(
-      'http://localhost:8080/api/result',
-      {
-        latitude: '37.237555 N',
-        longitude: '127.0710272 E',
-        dateTime: '2024-11-04T15:55:00.012Z',
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true, // 쿠키 허용
-      },
-    );
-    if (response.status === 200) {
-      const getCookie = response?.headers['set-cookie'];
-      // console.log('response:', response); // 성공 응답 출력
-      const parsedCookie = await parseCookie(getCookie[0]);
-      console.log(`===============userId: ${parseCookie}====================`); // 쿠키 출력
-
-      await session.defaultSession.cookies
-        .set({
-          url: 'http://localhost:3000', // 쿠키 저장할 주소
-          name: 'userId',
-          value: parsedCookie,
-          // path: '/api/result',
-          httpOnly: false, // client에서 쿠키를 접근 제한
-          expirationDate: Date.now() / 1000 + 3600, // 만료 시간
-        })
-        .then(() => {
-          console.log('쿠키 저장 성공', parsedCookie);
-        })
-        .catch(error => {
-          console.error('쿠키 저장 실패', error);
-        });
-    }
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
-  }
-});
-
-const parseCookie = cookies => {
-  const cookie = cookies.split('; ');
-  const targetCookie = cookie.find(cookie => cookie.startsWith(`userId=`));
-  return targetCookie?.split('=')[1]; // 쿠키 값 추출
-};
