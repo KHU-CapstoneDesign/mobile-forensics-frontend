@@ -40,7 +40,6 @@ const createWindow = () => {
 
   // 창 닫힘
   mainWindow.on('close', async event => {
-    event.preventDefault();
     // 이전 기록 삭제
     mainWindow.webContents.send('window-closing'); // 렌더러 프로세스에 이벤트 전달
   });
