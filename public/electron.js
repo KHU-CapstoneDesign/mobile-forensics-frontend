@@ -19,7 +19,7 @@ const createWindow = () => {
       enableRemoteModule: true,
       devTools: isDev,
       preload: path.join(__dirname, 'preload.js'),
-      webSecurity: true, // CORS 정책 비활성화
+      webSecurity: true, // CORS 정책 활성화
     },
   });
 
