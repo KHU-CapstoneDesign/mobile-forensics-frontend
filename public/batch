@@ -209,7 +209,7 @@ echo "EXIF 데이터 추출 중...1"
 
 for f in /Users/Shared/test/Camera/*.jpg; do
   filename=$(basename "$f" .jpg)
-  exiftool -gps* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
+  exiftool -gps* -date* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
 
   # 파일 전송 후 응답
   RESPONSE=$(curl -X POST \
@@ -237,7 +237,7 @@ echo "EXIF 데이터 추출 중...2"
 
 for f in /Users/Shared/test/Trash/*.jpg; do
   filename=$(basename "$f" .jpg)
-  exiftool -gps* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
+  exiftool -gps* -date* -c "%.6f" "$f" > "/Users/Shared/test/metadata/${filename}_metadata.txt"
 
   # 파일 전송 후 응답
   RESPONSE=$(curl -X POST \

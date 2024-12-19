@@ -152,7 +152,7 @@ for %%f in ("C:\test\Camera\*.jpg") do (
     REM 파일 이름에서 경로 및 확장자 제거
     set "filename=%%~nf"
     REM exiftool을 사용하여 EXIF GPS 데이터를 추출하고 해당 파일로 저장
-    exiftool -gps* -c "%%.6f" "%%f" > "C:\test\metadata\!filename!_metadata.txt"
+    exiftool -gps* -date* -c "%%.6f" "%%f" > "C:\test\metadata\!filename!_metadata.txt"
 )
 
 if errorlevel 1 (
@@ -168,7 +168,7 @@ for %%f in ("C:\test\Trash\*.jpg") do (
     REM 파일 이름에서 경로 및 확장자 제거
     set "filename=%%~nf"
     REM exiftool을 사용하여 EXIF GPS 데이터를 추출하고 해당 파일로 저장
-    exiftool -gps* -c "%%.6f" "%%f" > "C:\test\metadata\!filename!_metadata.txt"
+    exiftool -gps* -date* -c "%%.6f" "%%f" > "C:\test\metadata\!filename!_metadata.txt"
 )
 
 if errorlevel 1 (

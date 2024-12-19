@@ -57,7 +57,7 @@ const Result = () => {
   const { data } = useContext(DataContext);
   const navigate = useNavigate();
   const [level, setLevel] = useState(0); // 범죄 가능성
-  const [formatData, setFormatData] = useState(['gps']); // 결과 정보 가공
+  const [formatData, setFormatData] = useState([]); // 결과 정보 가공
   // const [cookie, setCookie] = useState();
   // const cookies = new Cookies();
 
@@ -81,7 +81,7 @@ const Result = () => {
       }
       if (data.gps.metadata || data.gps.wifi) {
         sum += 0.4;
-        // setFormatData(prev => [...prev, 'gps']);
+        setFormatData(prev => [...prev, 'gps']);
       }
       if (data.cache.soda || data.cache.mybox) {
         sum += 0.8;
