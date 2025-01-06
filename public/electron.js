@@ -17,7 +17,7 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: isDev,
+      devTools: true,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: true, // CORS 정책 활성화
     },
@@ -29,9 +29,7 @@ const createWindow = () => {
       : `file://${path.join(__dirname, '../build/index.html')}`,
   );
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools({ mode: 'right' });
-  }
+  mainWindow.webContents.openDevTools({ mode: 'right' });
 
   // mainWindow.setResizable(false);
   mainWindow.setResizable(true);

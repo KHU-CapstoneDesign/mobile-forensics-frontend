@@ -5,8 +5,8 @@
   "homepage": "./",
   "main": "public/electron.js",
   "build": {
-    "appId": "com.exmaple.electron",
-    "productName": "electronReact"
+    "appId": "com.forensics.electron",
+    "productName": "Forensics"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
